@@ -27,6 +27,11 @@ function newSprite(obj) {
 			Sprite.img.onload = function(){ 
 				Sprite.is_ready = true;
 				Sprite.drawFrame();
+				try {
+					addFoo();
+				} catch (e) {
+					
+				}
 			};
 			Sprite.img.src = Sprite.img_src; 
 		},
