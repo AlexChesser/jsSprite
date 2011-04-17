@@ -28,7 +28,7 @@ function newSprite(obj) {
 				Sprite.is_ready = true;
 				Sprite.drawFrame();
 				try {
-					addFoo();
+					DrawToParent(); // 
 				} catch (e) {
 					
 				}
