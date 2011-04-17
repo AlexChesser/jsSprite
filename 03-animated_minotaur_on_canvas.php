@@ -6,7 +6,7 @@
 
 	</head>
 	<body>
-		<canvas id='game' style='width: 128px; height: 128px;'> </canvas>
+		<canvas id='game' style='width: 512px; height: 512px;'> </canvas>
 		<script type="text/javascript" src="assets/Sprite.js"></script>		
 		<script type="text/javascript" src="assets/Minotaur.js"></script>
 	</body>
@@ -14,15 +14,12 @@
 		var canvas 		= document.getElementById('game');
 		var MainContext = canvas.getContext('2d');		
 		var m 			= newSprite(Minotaur());
-		
-		m.init(canvas);
 
-		runloop = function(m) {
-			m.drawFrame();
-		};
-		
-		minoTimer = setInterval('runloop(m)', (1000/5));
+		m.canvas = document.createElement('canvas');
+		m.init(m.canvas);
 
+		MainContext.drawImage(m.canvas, 0, 0, m.width, m.height);
+		
 
 		
 		
