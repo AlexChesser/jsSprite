@@ -43,6 +43,15 @@ function newSprite(obj) {
 				// Sprite.moveSprite(); //move sprite
 			}
 		},
+		turn: function(d) {
+			nd = Sprite.direction + d; // new direction.
+			if (nd < 0) { 
+				nd = Sprite.rows - 1;
+			} else if (nd >= Sprite.rows) {
+				nd = 0;
+			}
+			Sprite.direction = nd;
+		},		
 		step: function() {
 			var cf  = Sprite.frame; // the current frame we are on
 			var an  = Sprite.anim;  // the current anim we are running

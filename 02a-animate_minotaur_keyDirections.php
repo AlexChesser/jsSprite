@@ -21,22 +21,31 @@
 			m.drawFrame();
 		};
 		
-		minoTimer = setInterval('runloop(m)', (1000/5));
+		minoTimer = setInterval('runloop(m)', (1000/8));
 
 		document.addEventListener("keypress", 
 			function(e){
-				switch(e.charCode) {
+				switch(e.which) {
 					case 119:  // 'w'
-				  		m.direction = 2;
-				  		break;				
-					case 97:  // 's'
-				  		m.direction = 0;
+				  		m.anim = m.actions.run;
+				  		break;
+					case 97:  // 'a' - turn right
+				  		m.turn(-1);
 				  		break;
 					case 115:  // 's'
-				  		m.direction = 6;
+				  		m.anim = m.actions.stand;
 				  		break;
-					case 100:  // 'd'
-						m.direction = 4;
+					case 100:  // 'd' - turn left
+				  		m.turn(1);
+				  		break;
+					case 101: // e = attack
+				  		m.anim = m.actions.block;
+				  		break;
+					case 120: // x = die
+				  		m.anim = m.actions.die;
+				  		break;				  		
+					case 113: // q = attack
+				  		m.anim = m.actions.attack;
 				  		break;
 						default:
 				  			//code to be executed if n is different from case 1 and 2

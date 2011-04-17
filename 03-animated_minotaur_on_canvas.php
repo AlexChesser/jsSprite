@@ -16,8 +16,11 @@
 		var m 			= newSprite(Minotaur());
 
 		m.canvas = document.createElement('canvas');
-		m.init(m.canvas);
 
+		m.init(m.canvas);
+		m.drawFrame();
+
+		
 		MainContext.drawImage(m.canvas, 0, 0, m.width, m.height);
 		
 
