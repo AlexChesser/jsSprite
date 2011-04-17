@@ -51,14 +51,31 @@ function newSprite(obj) {
 				nd = 0;
 			}
 			Sprite.direction = nd;
-		},		
+		},
+		reanim: function(){
+			m.frame = m.anim.start;
+			m.anim.playdir = 1;
+		},
 		step: function() {
 			var cf  = Sprite.frame; // the current frame we are on
 			var an  = Sprite.anim;  // the current anim we are running
 			var nf  = cf + an.playdir; // this is the next frame
 			if (nf >= an.start+an.length || nf < an.start) {
 				// this means we must take action
-				nf = an.start;
+				switch(an.end) {
+					case 'reverse':
+						an.playdir *= -1;
+						nf  = cf + an.playdir;
+						break;
+					case 'hold':
+						an.playdir = 0;
+						nf  = cf + an.playdir;
+						break;
+					case 'loop':
+						nf = an.start;
+						break;
+					default:
+				}
 			}
 			Sprite.frame = nf;
 		}
