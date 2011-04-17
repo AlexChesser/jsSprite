@@ -15,7 +15,7 @@
 		</div>
 		<canvas id='game' style='width: 256px; height: 265px;'> </canvas>
 		<script type="text/javascript" src="assets/Minotaur.js"></script>
-		<script type="text/javascript" src="jsrpg.js"></script>
+		<script type="text/javascript" src="gameloop.js"></script>
 		
 		
 	</body>
