@@ -16,7 +16,7 @@ function Zombie() {
 			brains: {start: 16, length: 4, end: 'reverse'	, playdir: 1},			
 			block:	{start: 20, length: 2, end: 'hold'		, playdir: 1},
 			die: 	{start: 22, length: 6, end: 'hold'		, playdir: 1},
-			crit: 	{start: 28, length: 8, end: 'hold'		, playdir: 1}			
+			crit: 	{start: 28, length: 7, end: 'hold'		, playdir: 1}			
 		}
 	};
 	return obj;

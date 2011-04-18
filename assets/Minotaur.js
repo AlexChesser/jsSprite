@@ -1,14 +1,14 @@
 function Minotaur() {
 	var obj = {
-		img:		'assets/images/minotaur.png',
-		canvas:		0,
-		ctx:		0,
-		cols: 		24,
-		rows: 		8,
-		width: 128,
-		height:128,
-		frame: 0,
-		direction: 3,
+		img			: 'assets/images/minotaur.png',
+		canvas		: 0,
+		ctx			: 0,
+		cols		: 24,
+		rows		: 8,
+		width		: 128,
+		height		: 128,
+		frame		: 0,
+		direction	: 3,
 		anim : {
 			stand: 	{start:  0,	length: 4, end: 'reverse'	, playdir: 1},
 			run: 	{start:  4,	length: 8, end: 'loop'	 	, playdir: 1},

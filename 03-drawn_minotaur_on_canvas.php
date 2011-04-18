@@ -6,7 +6,7 @@
 
 	</head>
 	<body>
-		<canvas id='game' style='width: 512px; height: 512px;'> </canvas>
+		<canvas id='game' width=512 height=512> </canvas>
 		<script type="text/javascript" src="assets/Sprite.js"></script>		
 		<script type="text/javascript" src="assets/Minotaur.js"></script>
 	</body>
@@ -22,7 +22,7 @@
 
 		function DrawToParent() {
 			
-			MainContext.drawImage(m.canvas, 0, 0, 128, 64);
+			MainContext.drawImage(m.canvas, 0, 0);
 			
 		}
 

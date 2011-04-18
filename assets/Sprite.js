@@ -39,11 +39,13 @@ function newSprite(obj) {
 			Sprite.ctx.clearRect(0,0,Sprite.width,Sprite.height); //clear previous frame
 			if(Sprite.is_ready){ //do not draw if sprite is not ready
 				//calculate values for sprite based on animation
-				var srcX = Sprite.anim.start + (Sprite.frame * Sprite.width);
-				var srcY = Sprite.direction * Sprite.height;
-				var srcWidth = Sprite.width;
-				var srcHeight = Sprite.height;
-				Sprite.ctx.drawImage(Sprite.img, srcX, srcY, srcWidth, srcHeight, 0, 0, srcWidth, srcHeight); //draw image
+				var srcX 		= Sprite.anim.start + (Sprite.frame * Sprite.width);
+				var srcY 		= Sprite.direction * Sprite.height;
+				var srcWidth 	= Sprite.width;
+				var srcHeight 	= Sprite.height;
+				Sprite.ctx.drawImage(Sprite.img,
+									srcX, srcY, srcWidth, srcHeight, 
+									0, 0, srcWidth, srcHeight); //draw image
 				Sprite.step(); //advance animation
 				// Sprite.moveSprite(); //move sprite
 			}
