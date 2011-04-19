@@ -9,6 +9,11 @@ function newSprite(obj) {
 		rows: 		obj.rows,
 		width: 		obj.width,
 		height:		obj.height,
+		Xpos:		0,
+		Ypos:		0,
+		Xspd:		0,
+		Yspd:		0,
+		speed:		obj.speed,
 		actions:	obj.anim,	// this is the list of animations the sprite has
 		anim:		0,			// this is the current animation the sprite is running
 		frame: 		0,			// this is the current frame of the animation
@@ -35,14 +40,35 @@ function newSprite(obj) {
 			};
 			Sprite.img.src = Sprite.img_src; 
 		},
+		getSpeed:	function() {
+			var DirectionMap = {
+				0 : [-1.0,  0.0],
+				1 : [-0.5, -0.5],
+				2 : [ 0.0, -1.0],
+				3 : [ 0.5, -0.5],
+				4 : [ 1.0,  0.0],
+				5 : [ 0.5,  0.5],
+				6 : [ 0.0,  1.0],
+				7 : [-0.5,  0.5]
+			};
+			dm = DirectionMap[Sprite.direction];
+			Sprite.Xspd = dm[0] * Sprite.speed;
+			Sprite.Yspd = dm[1] * Sprite.speed;
+		},
 		drawFrame: function(){
 			Sprite.ctx.clearRect(0,0,Sprite.width,Sprite.height); //clear previous frame
+			MainContext.clearRect(Sprite.Xpos, Sprite.Ypos, Sprite.width, Sprite.height);
 			if(Sprite.is_ready){ //do not draw if sprite is not ready
 				//calculate values for sprite based on animation
 				var srcX 		= Sprite.anim.start + (Sprite.frame * Sprite.width);
 				var srcY 		= Sprite.direction * Sprite.height;
 				var srcWidth 	= Sprite.width;
 				var srcHeight 	= Sprite.height;
+				if (Sprite.anim.name == 'run') {
+					Sprite.getSpeed();
+					Sprite.Xpos += Sprite.Xspd;
+					Sprite.Ypos += Sprite.Yspd;
+				}
 				Sprite.ctx.drawImage(Sprite.img,
 									srcX, srcY, srcWidth, srcHeight, 
 									0, 0, srcWidth, srcHeight); //draw image
