@@ -1,36 +1,3 @@
-function Collision() {
-	var C = {
-		dirtyCollision: function(object1, object2) {
-			// This takes 2 Sprite objects and does a bounding-box collision detection:
-		    var left1, left2;
-		    var right1, right2;
-		    var top1, top2;
-		    var bottom1, bottom2;
-
-		    left1 = object1.Xpos;
-		    left2 = object2.Xpos;
-		    right1 = object1.Xpos + object1.width;
-		    right2 = object2.Xpos + object2.width;
-		    top1 = object1.Ypoz;
-		    top2 = object2.Ypos;
-		    bottom1 = object1.Ypos + object1.height;
-		    bottom2 = object2.Ypos + object2.height;
-
-		    if (bottom1 < top2) return false;
-		    if (top1 > bottom2) return false;
-
-		    if (right1 < left2) return false;
-		    if (left1 > right2) return false;
-
-		    return true;
-		
-		},
-		precise: function() { 
-			
-		}
-	}
-	return C;
-}
 function newSprite(obj) {
 	var Sprite = {
 		is_ready:	false,
@@ -53,7 +20,6 @@ function newSprite(obj) {
 		anim:		0,			// this is the current animation the sprite is running
 		frame: 		0,			// this is the current frame of the animation
 		direction: 	0,			// this is the direction (of 8) it is running in
-		C:			0,
 		init : function(c){
 			Sprite.canvas = c;
 			Sprite.canvas.setAttribute('width',  Sprite.width);
@@ -62,7 +28,6 @@ function newSprite(obj) {
 			Sprite.loadImage(); 
 			Sprite.anim = Sprite.actions.stand;
 			Sprite.direction = 6;
-			Sprite.C = Collision();
 		},
 		loadImage: function(){  			
 			Sprite.img = new Image();  		
