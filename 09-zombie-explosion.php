@@ -42,7 +42,6 @@
 				Zarr[i].anim = Zarr[i].actions.run;
 			};
 		};
-		
 		runloop = function(m) {
 			MainContext.clearRect(0,0,canvas.width,canvas.height);
 				
@@ -68,7 +67,7 @@
 			msg2.value = m.RunToXY;
 		};
 		gameInit();
-		minoTimer = setInterval('runloop(m)', (1000/18));
+		minoTimer = setInterval('runloop(m)', (1000/15));
 		
 	</script>
 	

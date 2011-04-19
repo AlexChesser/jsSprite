@@ -19,6 +19,7 @@ function newSprite(obj) {
 		actions:	obj.anim,	// this is the list of animations the sprite has
 		anim:		0,			// this is the current animation the sprite is running
 		frame: 		0,			// this is the current frame of the animation
+		pause:		0,			// in order to use amazing frame rates, we need a pause for the animation.
 		direction: 	0,			// this is the direction (of 8) it is running in
 		dead:		0,
 		init : function(c){
