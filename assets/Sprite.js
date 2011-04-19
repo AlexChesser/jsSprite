@@ -15,6 +15,7 @@ function newSprite(obj) {
 		Xspd:		0,
 		Yspd:		0,
 		speed:		obj.speed,
+		RunToXY:	0,
 		actions:	obj.anim,	// this is the list of animations the sprite has
 		anim:		0,			// this is the current animation the sprite is running
 		frame: 		0,			// this is the current frame of the animation
@@ -84,6 +85,11 @@ function newSprite(obj) {
 				var srcY 		= Sprite.direction * Sprite.height;
 				var srcWidth 	= Sprite.width;
 				var srcHeight 	= Sprite.height;
+				
+				
+				if (Sprite.RunToXY != 0) {
+					Sprite.runTo(Sprite.RunToXY);
+				}
 				if (Sprite.anim.name == 'run') {
 					Sprite.getSpeed();
 					Sprite.Xpos += Sprite.Xspd;
@@ -94,6 +100,16 @@ function newSprite(obj) {
 									0, 0, srcWidth, srcHeight); //draw image
 				Sprite.step(); //advance animation
 				// Sprite.moveSprite(); //move sprite
+			}
+		},
+		runTo: function(xy) {
+			if ([Sprite.Xpos, Sprite.Ypos] == xy) { 
+				Sprite.anim = Sprite.actions.stand;
+				Sprite.RunToXY = 0;
+			} else {
+				Sprite.anim = Sprite.actions.run;
+				var pt = {Xpos: xy[0], Ypos: xy[1]};
+				Sprite.pointTo(pt);
 			}
 		},
 		turn: function(d) {
