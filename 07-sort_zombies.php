@@ -17,6 +17,8 @@
 		var m 			= newSprite(Minotaur());
 		var Zarr		= new Array();
 
+
+		//  MERGE ISN'T NEEDED OR USED, It was a mistaken assumption.
 		function mergeSort(arr) {
 		    if (arr.length < 2)
 		        return arr;
@@ -38,7 +40,6 @@
 		            result.push(right.shift());
 		        }
 		    }
-		 
 		    while (left.length)
 		        result.push(left.shift());
 		 
@@ -47,8 +48,6 @@
 		 
 		    return result;
 		}
-
-
 		
 		gameInit = function(){
 			m.canvas = document.createElement('canvas');
