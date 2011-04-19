@@ -139,8 +139,8 @@ function newSprite(obj) {
 			Sprite.direction = nd;
 		},
 		reanim: function(){
-			m.frame = m.anim.start;
-			m.anim.playdir = 1;
+			Sprite.frame = Sprite.anim.start;
+			Sprite.anim.playdir = 1;
 		},
 		dirtyCollision: function(obj) {
 			// Checks this sprite against another object:

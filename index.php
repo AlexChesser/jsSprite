@@ -23,6 +23,7 @@
 		<a href="06-brainnsss....php">Test 6 - Brainssss....</a><br/>
 		<a href="07-sort_zombies.php">Test 7 - Sort Zombies</a><br/>
 		<a href="08-mouse_move.php">Test 8 - Mouse move</a><br/>		
+		<a href="09-zombie-explosion.php">Test 9 - Zombie Explosion</a><br/>				
 		
 	</body>
 </html>
