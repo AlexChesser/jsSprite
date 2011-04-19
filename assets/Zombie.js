@@ -7,6 +7,7 @@ function Zombie() {
 		rows: 		8,
 		width: 		128,
 		height:		128,
+		speed: 		3,		
 		frame: 0,
 		direction: 3,
 		anim : {

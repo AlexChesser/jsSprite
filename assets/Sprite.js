@@ -42,18 +42,37 @@ function newSprite(obj) {
 		},
 		getSpeed:	function() {
 			var DirectionMap = {
-				0 : [-1.0,  0.0],
-				1 : [-0.5, -0.5],
-				2 : [ 0.0, -1.0],
-				3 : [ 0.5, -0.5],
-				4 : [ 1.0,  0.0],
-				5 : [ 0.5,  0.5],
-				6 : [ 0.0,  1.0],
-				7 : [-0.5,  0.5]
+				0 : [-1.0,  0.0],  // 0 - W
+				1 : [-0.5, -0.5],  // 1 - NW
+				2 : [ 0.0, -1.0],  // 2 - N 
+				3 : [ 0.5, -0.5],  // 3 - NE
+				4 : [ 1.0,  0.0],  // 4 - E
+				5 : [ 0.5,  0.5],  // 5 - SE
+				6 : [ 0.0,  1.0],  // 6 - S
+				7 : [-0.5,  0.5]   // 7 - SW
 			};
 			dm = DirectionMap[Sprite.direction];
 			Sprite.Xspd = dm[0] * Sprite.speed;
 			Sprite.Yspd = dm[1] * Sprite.speed;
+		},
+		pointTo: function(pt){
+			var Orientation = (Sprite.Xpos < pt.Xpos)+','+(Sprite.Ypos > pt.Ypos) // Orientation
+			switch (Orientation) {
+				case 'true,true':
+					Sprite.direction = 3;
+					break;
+				case 'true,false':
+					Sprite.direction = 5;
+					break;
+				case 'false,true':
+					Sprite.direction = 1;
+					break;
+				case 'false,false':
+					Sprite.direction = 7;
+					break;				
+				default:
+					
+			};
 		},
 		drawFrame: function(){
 			Sprite.ctx.clearRect(0,0,Sprite.width,Sprite.height); //clear previous frame

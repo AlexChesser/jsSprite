@@ -33,7 +33,9 @@
 		runloop = function(m) {
 			m.drawFrame();
 			for (Z in Zarr) {  // For ZOMBIE in "Zombie Array" Aaaaarrrgghhh... 
+				Zarr[Z].pointTo(m);
 				Zarr[Z].drawFrame();
+				//Zarr[Z].anim = Zarr[Z].actions.run;
 				MainContext.drawImage(Zarr[Z].canvas, Zarr[Z].Xpos, Zarr[Z].Ypos);
 			};
 			MainContext.drawImage(m.canvas, m.Xpos, m.Ypos);
