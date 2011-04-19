@@ -102,10 +102,27 @@ function newSprite(obj) {
 				// Sprite.moveSprite(); //move sprite
 			}
 		},
+		closeTo: function(p1, p2, range){
+			if(p1 <= p2+range && p1 >= p2-range ){
+				// close enough on the X axis
+				return true;
+			}
+			return false;
+		},
 		runTo: function(xy) {
-			if ([Sprite.Xpos, Sprite.Ypos] == xy) { 
-				Sprite.anim = Sprite.actions.stand;
+			// must add "approximation" to test within a few pixels
+			// at the moment. once the mino gets to his "spot" he 
+			// does the flipflop dance.
+			
+			if (Sprite.closeTo(Sprite.Xpos, xy[0], Sprite.speed)) {
+				Sprite.Xpos = xy[0];
+			}
+			if (Sprite.closeTo(Sprite.Ypos, xy[1], Sprite.speed)) {
+				Sprite.Xpos = xy[0];
+			}			
+			if ((Sprite.Xpos == xy[0]) && (Sprite.Ypos == xy[1])) { 
 				Sprite.RunToXY = 0;
+				Sprite.anim = Sprite.actions.stand;				
 			} else {
 				Sprite.anim = Sprite.actions.run;
 				var pt = {Xpos: xy[0], Ypos: xy[1]};

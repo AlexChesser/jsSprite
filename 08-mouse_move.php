@@ -7,14 +7,22 @@
 	<head>
 	</head>
 	<body>
+		<input id='message_1' />  		<input id='message_2' />
+	
 		<canvas id='game' width=1024 height=700> </canvas>
 		<script type="text/javascript" src="assets/Sprite.js"></script>		
 		<script type="text/javascript" src="assets/Minotaur.js"></script>
 		<script type="text/javascript" src="assets/Zombie.js"></script>		
 		<script type="text/javascript" src="assets/Keys.js"></script>
-		<script type="text/javascript" src="assets/Mouse.js"></script>		
+		<script type="text/javascript" src="assets/Mouse.js"></script>
+		
+
+		
 	</body>
 	<script type="text/javascript">
+	var msg1 = document.getElementById('message_1');
+	var msg2 = document.getElementById('message_2');	
+	
 		var canvas 		= document.getElementById('game');
 		var MainContext = canvas.getContext('2d');		
 		var m 			= newSprite(Minotaur());
@@ -45,6 +53,9 @@
 				MainContext.drawImage(Zarr[Z].canvas, Zarr[Z].Xpos, Zarr[Z].Ypos);
 			};
 			MainContext.drawImage(m.canvas, m.Xpos, m.Ypos);
+
+			msg1.value = m.Xpos +','+m.Ypos;
+			msg2.value = m.RunToXY;
 		};
 		gameInit();
 		minoTimer = setInterval('runloop(m)', (1000/18));
