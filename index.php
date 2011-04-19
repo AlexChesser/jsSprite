@@ -17,6 +17,7 @@
 		<a href="02a-animate_zombie_keyDirections.php">Test 2 - Animate Zombie with Keys</a><br/>		
 		<a href="03-drawn_minotaur_on_canvas.php">Test 3 - Drawn Minotaur on Canvas</a><br/>
 		<a href="04-animated_minotaur_on_canvas.php">Test 4 - Animated Minotaur on Canvas</a><br/>		
+		<a href="05-animated_minotaur_on_canvas_and_zombies.php">Test 5 - Animated Minotaur and Zombies</a><br/>		
 		
 		
 	</body>
