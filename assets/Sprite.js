@@ -77,7 +77,7 @@ function newSprite(obj) {
 		},
 		drawFrame: function(){
 			Sprite.ctx.clearRect(0,0,Sprite.width,Sprite.height); //clear previous frame
-			MainContext.clearRect(Sprite.Xpos, Sprite.Ypos, Sprite.width, Sprite.height);
+			//MainContext.clearRect(Sprite.Xpos, Sprite.Ypos, Sprite.width, Sprite.height);
 			if(Sprite.is_ready){ //do not draw if sprite is not ready
 				//calculate values for sprite based on animation
 				var srcX 		= Sprite.anim.start + (Sprite.frame * Sprite.width);

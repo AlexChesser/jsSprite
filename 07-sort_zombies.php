@@ -64,9 +64,11 @@
 		};
 		
 		runloop = function(m) {
+			MainContext.clearRect(0,0,canvas.width,canvas.height);
+				
 			m.drawFrame();
 			
-			Zarr = mergeSort(Zarr);
+			// Zarr = mergeSort(Zarr); // apparently not needed
 			
 			for (Z in Zarr) {  // For ZOMBIE in "Zombie Array" Aaaaarrrgghhh... 
 				Zarr[Z].pointTo(m);
