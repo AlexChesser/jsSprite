@@ -1,6 +1,7 @@
 function newSprite(obj) {
 	var Sprite = {
 		is_ready:	false,
+		type:		obj.type,
 		canvas:		0,
 		ctx:		0,
 		img:		0,			// this becomes imagedata		

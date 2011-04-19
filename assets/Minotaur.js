@@ -1,5 +1,6 @@
 function Minotaur() {
 	var obj = {
+		type		: 'minotaur',
 		img			: 'assets/images/minotaur.png',
 		canvas		: 0,
 		ctx			: 0,
