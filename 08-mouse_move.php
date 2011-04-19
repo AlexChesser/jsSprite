@@ -8,6 +8,7 @@
 	</head>
 	<body>
 		<input id='message_1' />  		<input id='message_2' />
+		<input id='message_3' />
 	
 		<canvas id='game' width=1024 height=700> </canvas>
 		<script type="text/javascript" src="assets/Sprite.js"></script>		
@@ -21,7 +22,8 @@
 	</body>
 	<script type="text/javascript">
 	var msg1 = document.getElementById('message_1');
-	var msg2 = document.getElementById('message_2');	
+	var msg2 = document.getElementById('message_2');
+	var msg3 = document.getElementById('message_3');	
 	
 		var canvas 		= document.getElementById('game');
 		var MainContext = canvas.getContext('2d');		
@@ -56,6 +58,7 @@
 
 			msg1.value = m.Xpos +','+m.Ypos;
 			msg2.value = m.RunToXY;
+			msg3.value = m.dirtyCollision(Zarr[Z]);			
 		};
 		gameInit();
 		minoTimer = setInterval('runloop(m)', (1000/18));

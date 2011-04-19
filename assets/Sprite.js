@@ -1,3 +1,36 @@
+function Collision() {
+	var C = {
+		dirtyCollision: function(object1, object2) {
+			// This takes 2 Sprite objects and does a bounding-box collision detection:
+		    var left1, left2;
+		    var right1, right2;
+		    var top1, top2;
+		    var bottom1, bottom2;
+
+		    left1 = object1.Xpos;
+		    left2 = object2.Xpos;
+		    right1 = object1.Xpos + object1.width;
+		    right2 = object2.Xpos + object2.width;
+		    top1 = object1.Ypoz;
+		    top2 = object2.Ypos;
+		    bottom1 = object1.Ypos + object1.height;
+		    bottom2 = object2.Ypos + object2.height;
+
+		    if (bottom1 < top2) return false;
+		    if (top1 > bottom2) return false;
+
+		    if (right1 < left2) return false;
+		    if (left1 > right2) return false;
+
+		    return true;
+		
+		},
+		precise: function() { 
+			
+		}
+	}
+	return C;
+}
 function newSprite(obj) {
 	var Sprite = {
 		is_ready:	false,
@@ -20,6 +53,7 @@ function newSprite(obj) {
 		anim:		0,			// this is the current animation the sprite is running
 		frame: 		0,			// this is the current frame of the animation
 		direction: 	0,			// this is the direction (of 8) it is running in
+		C:			0,
 		init : function(c){
 			Sprite.canvas = c;
 			Sprite.canvas.setAttribute('width',  Sprite.width);
@@ -28,6 +62,7 @@ function newSprite(obj) {
 			Sprite.loadImage(); 
 			Sprite.anim = Sprite.actions.stand;
 			Sprite.direction = 6;
+			Sprite.C = Collision();
 		},
 		loadImage: function(){  			
 			Sprite.img = new Image();  		
@@ -89,7 +124,7 @@ function newSprite(obj) {
 				
 				if (Sprite.RunToXY != 0) {
 					Sprite.runTo(Sprite.RunToXY);
-				}
+				} 
 				if (Sprite.anim.name == 'run') {
 					Sprite.getSpeed();
 					Sprite.Xpos += Sprite.Xspd;
@@ -114,15 +149,15 @@ function newSprite(obj) {
 			// at the moment. once the mino gets to his "spot" he 
 			// does the flipflop dance.
 			
-			if (Sprite.closeTo(Sprite.Xpos, xy[0], Sprite.speed)) {
-				Sprite.Xpos = xy[0];
-			}
-			if (Sprite.closeTo(Sprite.Ypos, xy[1], Sprite.speed)) {
-				Sprite.Xpos = xy[0];
-			}			
-			if ((Sprite.Xpos == xy[0]) && (Sprite.Ypos == xy[1])) { 
+			var O2 = {	Xpos: 	xy[0],
+						Ypos:	xy[1],
+						width:	1,
+						height:	1};
+			
+			if (Sprite.dirtyCollision(O2)) {		
 				Sprite.RunToXY = 0;
-				Sprite.anim = Sprite.actions.stand;				
+				Sprite.anim = Sprite.actions.stand;
+				Sprite.reanim();
 			} else {
 				Sprite.anim = Sprite.actions.run;
 				var pt = {Xpos: xy[0], Ypos: xy[1]};
@@ -142,6 +177,31 @@ function newSprite(obj) {
 			m.frame = m.anim.start;
 			m.anim.playdir = 1;
 		},
+		dirtyCollision: function(obj) {
+			// Checks this sprite against another object:
+		    var left1, left2;
+		    var right1, right2;
+		    var top1, top2;
+		    var bottom1, bottom2;
+
+		    left1 = Sprite.Xpos;
+		    left2 = obj.Xpos;
+		    right1 = Sprite.Xpos + Sprite.width;
+		    right2 = obj.Xpos + obj.width;
+		    top1 = Sprite.Ypoz;
+		    top2 = obj.Ypos;
+		    bottom1 = Sprite.Ypos + Sprite.height;
+		    bottom2 = obj.Ypos + obj.height;
+
+		    if (bottom1 < top2) return false;
+		    if (top1 > bottom2) return false;
+
+		    if (right1 < left2) return false;
+		    if (left1 > right2) return false;
+
+		    return true;
+		
+		},		
 		step: function() {
 			var cf  = Sprite.frame; // the current frame we are on
 			var an  = Sprite.anim;  // the current anim we are running
