@@ -11,7 +11,7 @@
 		</style>
 	</head>
 	<body>
-		Note that the latest
+		Note that the latest is available on Github <br/>
 	
 		<a href="01-draw_minotaur.php">Test 1 - Draw Minotaur</a><br/>
 		<a href="02-animate_minotaur.php">Test 2 - Animate Minotaur</a><br/>

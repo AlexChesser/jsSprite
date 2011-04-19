@@ -20,6 +20,7 @@ function newSprite(obj) {
 		anim:		0,			// this is the current animation the sprite is running
 		frame: 		0,			// this is the current frame of the animation
 		direction: 	0,			// this is the direction (of 8) it is running in
+		dead:		0,
 		init : function(c){
 			Sprite.canvas = c;
 			Sprite.canvas.setAttribute('width',  Sprite.width);
@@ -85,7 +86,6 @@ function newSprite(obj) {
 				var srcY 		= Sprite.direction * Sprite.height;
 				var srcWidth 	= Sprite.width;
 				var srcHeight 	= Sprite.height;
-				
 				
 				if (Sprite.RunToXY != 0) {
 					Sprite.runTo(Sprite.RunToXY);
@@ -165,8 +165,7 @@ function newSprite(obj) {
 		    if (left1 > right2) return false;
 
 		    return true;
-		
-		},		
+		},
 		step: function() {
 			var cf  = Sprite.frame; // the current frame we are on
 			var an  = Sprite.anim;  // the current anim we are running

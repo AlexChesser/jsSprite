@@ -50,12 +50,16 @@
 			
 			for (Z in Zarr) {  // For ZOMBIE in "Zombie Array" Aaaaarrrgghhh... 
 				var zmb = Zarr[Z];  // shorthand 
-				zmb.pointTo(m);
+				
 				zmb.drawFrame();
-				if (zmb.dirtyCollision(m)) {
-					zmb.anim = zmb.actions.crit;
-					zmb.reanim();
-				}
+				if (!zmb.dead) {
+					zmb.pointTo(m);
+					if (zmb.dirtyCollision(m)) {
+						zmb.dead = 1;
+						zmb.anim = zmb.actions.crit;
+						zmb.reanim();
+					}
+				};
 				MainContext.drawImage(zmb.canvas, zmb.Xpos, zmb.Ypos);
 			};
 			MainContext.drawImage(m.canvas, m.Xpos, m.Ypos);
