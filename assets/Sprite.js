@@ -60,23 +60,33 @@ function newSprite(obj) {
 			Sprite.Yspd = dm[1] * Sprite.speed;
 		},
 		pointTo: function(pt){
-			var Orientation = (Sprite.Xpos < pt.Xpos)+','+(Sprite.Ypos > pt.Ypos) // Orientation
-			switch (Orientation) {
-				case 'true,true':
-					Sprite.direction = 3;
-					break;
-				case 'true,false':
-					Sprite.direction = 5;
-					break;
-				case 'false,true':
-					Sprite.direction = 1;
-					break;
-				case 'false,false':
-					Sprite.direction = 7;
-					break;				
-				default:
-					
-			};
+			
+			var xChk = Sprite.Xpos + (Sprite.width /2);
+			var yChk = Sprite.Ypos + (Sprite.height /2);				
+			var angle = Math.atan2(xChk-pt.Xpos,yChk-pt.Ypos);
+			var d = angle * (180 / Math.PI);
+			
+			// I hate this.  this is the most unreadable garbage EVER.
+			// is this how the pros do it? 
+			
+			if (d < -22.5 && d >= -67.5) {
+				Sprite.direction = 3;
+			} else if (d < -67.5 && d >= -112.5) {
+				Sprite.direction = 4;
+			} else if (d < -112.5 && d >= -157.5) {
+				Sprite.direction = 5;
+			} else if (d > 22.5 && d <= 67.5) {
+				Sprite.direction = 1;
+			} else if (d > 67.5 && d <= 112.5) {
+				Sprite.direction = 0;
+			} else if (d > 112.5 && d <= 157.5) {
+				Sprite.direction = 7;
+			} else if (Math.abs(d) <= 22.5) {
+				Sprite.direction = 2;
+			} else if (Math.abs(d) > 157.5) {
+				Sprite.direction = 6;
+			} 
+			
 		},
 		drawFrame: function(){
 			Sprite.ctx.clearRect(0,0,Sprite.width,Sprite.height); //clear previous frame
@@ -119,7 +129,7 @@ function newSprite(obj) {
 						Ypos:	xy[1],
 						width:	1,
 						height:	1};
-			
+			Sprite.pointTo(O2);
 			if (Sprite.dirtyCollision(O2)) {		
 				Sprite.RunToXY = 0;
 				Sprite.anim = Sprite.actions.stand;
@@ -127,7 +137,7 @@ function newSprite(obj) {
 			} else {
 				Sprite.anim = Sprite.actions.run;
 				var pt = {Xpos: xy[0], Ypos: xy[1]};
-				Sprite.pointTo(pt);
+				
 			}
 		},
 		turn: function(d) {

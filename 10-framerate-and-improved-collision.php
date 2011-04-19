@@ -9,8 +9,9 @@
 	<body>
 		<input id='message_1' />  		<input id='message_2' />
 		<input id='message_3' />
-	
-		<canvas id='game' width=1024 height=700> </canvas>
+		<br/>
+		<style>canvas canvas {border: 1px solid black;}</style>
+		<canvas id='game' width=1024 height=700 style="border: 1px solid black;"> </canvas>
 		<script type="text/javascript" src="assets/Sprite.js"></script>		
 		<script type="text/javascript" src="assets/Minotaur.js"></script>
 		<script type="text/javascript" src="assets/Zombie.js"></script>		
