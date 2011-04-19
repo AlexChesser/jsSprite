@@ -69,21 +69,21 @@ function newSprite(obj) {
 			// I hate this.  this is the most unreadable garbage EVER.
 			// is this how the pros do it? 
 			
-			if (d < -22.5 && d >= -67.5) {
+			if (d < -23 && d >= -68) {
 				Sprite.direction = 3;
-			} else if (d < -67.5 && d >= -112.5) {
+			} else if (d < -68 && d >= -113) {
 				Sprite.direction = 4;
-			} else if (d < -112.5 && d >= -157.5) {
+			} else if (d < -113 && d >= -158) {
 				Sprite.direction = 5;
-			} else if (d > 22.5 && d <= 67.5) {
+			} else if (d > 23 && d <= 68) {
 				Sprite.direction = 1;
-			} else if (d > 67.5 && d <= 112.5) {
+			} else if (d > 68 && d <= 113) {
 				Sprite.direction = 0;
-			} else if (d > 112.5 && d <= 157.5) {
+			} else if (d > 113 && d <= 158) {
 				Sprite.direction = 7;
-			} else if (Math.abs(d) <= 22.5) {
+			} else if (Math.abs(d) <= 23) {
 				Sprite.direction = 2;
-			} else if (Math.abs(d) > 157.5) {
+			} else if (Math.abs(d) > 158) {
 				Sprite.direction = 6;
 			} 
 			
@@ -113,13 +113,6 @@ function newSprite(obj) {
 				// Sprite.moveSprite(); //move sprite
 			}
 		},
-		closeTo: function(p1, p2, range){
-			if(p1 <= p2+range && p1 >= p2-range ){
-				// close enough on the X axis
-				return true;
-			}
-			return false;
-		},
 		runTo: function(xy) {
 			// must add "approximation" to test within a few pixels
 			// at the moment. once the mino gets to his "spot" he 
@@ -137,7 +130,6 @@ function newSprite(obj) {
 			} else {
 				Sprite.anim = Sprite.actions.run;
 				var pt = {Xpos: xy[0], Ypos: xy[1]};
-				
 			}
 		},
 		turn: function(d) {

@@ -24,7 +24,7 @@
 		<a href="07-sort_zombies.php">Test 7 - Sort Zombies</a><br/>
 		<a href="08-mouse_move.php">Test 8 - Mouse move</a><br/>		
 		<a href="09-zombie-explosion.php">Test 9 - Zombie Explosion</a><br/>				
-		<a href="10-framerate-and-improved-collision.php">Test 10 - Improved Framerate and Collisions</a><br/>				
+		<a href="10-better-directions.php">Test 10 - better directions</a><br/>				
 
 		
 	</body>
