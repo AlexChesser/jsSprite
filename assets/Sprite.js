@@ -157,23 +157,71 @@ function newSprite(obj) {
 			// compare
 			
 			// start the same way as a dirty collision
-		    var left1, left2;
-		    var right1, right2;
-		    var top1, top2;
-		    var bottom1, bottom2;
+		    
+		    var left1, left2, over_left;
+		    var right1, right2, over_right;
+		    var top1, top2, over_top;
+		    var bottom1, bottom2, over_bottom;
+		    var over_width, over_height;
+		    var i, j;
 
 		    left1 = Sprite.Xpos;
 		    left2 = obj.Xpos;
 		    right1 = Sprite.Xpos + Sprite.width;
 		    right2 = obj.Xpos + obj.width;
-		    top1 = Sprite.Ypoz;
+		    top1 = Sprite.Ypos;
 		    top2 = obj.Ypos;
 		    bottom1 = Sprite.Ypos + Sprite.height;
-		    bottom2 = obj.Ypos + obj.height;
+		    bottom2 = obj.Ypos + obj.height;		    
 		    
+		    // Trivial Detections (will tune later)
+		    if (bottom1 < top2) return false;
+		    if (top1 > bottom2) return false;
+		    if (right1 < left2) return false;
+		    if (left1 > right2) return false;
 		    
+		    if (bottom1 > bottom2) over_bottom = bottom2;
+		    else over_bottom = bottom1;
 		    
+		    if (top1 < top2) over_top = top2;
+		    else over_top = top1;
+
+		    if (right1 > right2) over_right = right2;
+		    else over_right = right1;
+
+		    if (left1 < left2) over_left = left2;
+		    else over_left = left1;
 		    
+		    console.log('ob:'+over_bottom+' ot: '+over_top+' or: '+over_right+' ol: '+over_left);
+		    
+		    /*
+			    // Now compute starting offsets into both objects' bitmaps:
+			    i = ((over_top - object1.y) * object1.width) + over_left;
+			    pixel1 = object1.frames[object1.curr_frame] + i;
+			
+			    j = ((over_top - object2.y) * object2.width) + over_left;
+			    pixel2 = object2.frames[object2.curr_frame] + j;
+			
+			  
+			    // Now start scanning the whole rectangle of overlap,
+			    // checking the corresponding pixel of each object's
+			    // bitmap to see if they're both non-zero:
+			
+			    for (i=0; i < over_height; I++) {
+			        for (j=0; j < over_width; j++) {
+			            if (*pixel1 > 0) && (*pixel2 > 0) return(1);
+			            pixel1++;
+			            pixel2++;
+			        }
+			        pixel1 += (object1->width - over_width);
+			        pixel2 += (object2->width - over_width);
+			    }
+			
+			    // Worst case!  We scanned through the whole darn rectangle of overlap 
+			    // and couldn't find a single colliding pixel!
+			
+			    return(0);
+		     */
 		    
 		    
 		},

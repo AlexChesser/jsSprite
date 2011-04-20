@@ -34,13 +34,15 @@
 		gameInit = function(){
 			m.canvas = document.createElement('canvas');
 			m.init(m.canvas);
-			for (var i=0; i <= 4; i=i+1) {
+			
+			for (var i=0; i <= 0; i=i+1) {
+				// use only 1 zombie for hit testing
 				Zarr[i] = newSprite(Zombie());
 				Zarr[i].canvas = document.createElement('canvas');
 				Zarr[i].Xpos = (Math.floor(Math.random()*400));
 				Zarr[i].Ypos = (Math.floor(Math.random()*400));
 				Zarr[i].init(Zarr[i].canvas);
-				Zarr[i].anim = Zarr[i].actions.run;
+				Zarr[i].anim = Zarr[i].actions.stand;
 			};
 		};
 		runloop = function(m) {
@@ -54,7 +56,8 @@
 				zmb.drawFrame();
 				if (!zmb.dead) {
 					zmb.pointTo(m);
-					if (zmb.dirtyCollision(m)) {
+					// now testing detail collision
+					if (zmb.detailCollision(m)) {
 						zmb.dead = 1;
 						zmb.anim = zmb.actions.crit;
 						zmb.reanim();

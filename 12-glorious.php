@@ -18,7 +18,7 @@
 		<script type="text/javascript" src="assets/Zombie.js"></script>		
 		<script type="text/javascript" src="assets/Keys.js"></script>
 		<script type="text/javascript" src="assets/Mouse.js"></script>
-		<textarea id='fufufu' rows="100" cols="80"></textarea>
+
 
 		
 	</body>
@@ -26,7 +26,6 @@
 	var msg1 = document.getElementById('message_1');
 	var msg2 = document.getElementById('message_2');
 	var msg3 = document.getElementById('message_3');	
-	var fffffffuuuuuuuuuuuu;
 	
 		var canvas 		= document.getElementById('game');
 		var MainContext = canvas.getContext('2d');		
@@ -66,27 +65,7 @@
 			};
 			MainContext.drawImage(m.canvas, m.Xpos, m.Ypos);
 
-			// OK - obviously getting a little tired at the moment, but this code as actually
-			// pretty useful.  What I've managed to do in this space is take a small sample of 
-			// the canvas and read it into memory
-			//
-			// then I loop through each "pixel" in that memory space and can read the color at that spot
-			// when I run this script from the 0,0 corner - (where) every pixel in the array is "whitespace" 
-			// the value comes out as "0"
-			//
-			// As you can see from this one, the value comes out as numbers (each probably representing a color value
-			// I wonder if "255" is the shadow, or maybe it's black?  Who knows?  From here it's time 
-			// to try a bit more stuff
-			
-			var fufufu = document.getElementById('fufufu');	
-			if (m.is_ready && m.dead == 0) {   // there's a lot of data, only read once
-				m.dead = 1;  					
-				fffffffuuuuuuuuuuuu = MainContext.getImageData(m.Xpos+64, m.Ypos+64, 10, 10);  // read a small chunk
-																							   // to debug, will do this with the whole overlap area
-				for (f in fffffffuuuuuuuuuuuu.data) {
-					fufufu.value = fufufu.value + '\n' + fffffffuuuuuuuuuuuu.data[f];    // the data sits at (getImageData).data
-				}
-			}
+
 			
 			
 			msg1.value = m.Xpos +','+m.Ypos;
