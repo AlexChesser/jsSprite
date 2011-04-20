@@ -26,7 +26,7 @@
 		<a href="09-zombie-explosion.php">Test 9 - Zombie Explosion</a><br/>				
 		<a href="10-better-directions.php">Test 10 - better directions</a><br/>
 		<a href="11-first-read-pixels-in-an-image.php">Test 11 - heavy lifting before pixel perfect collision</a><br/>
-		<a href="12-glorious.php">Test 12 - Grlorious!</a><br/>
+		<a href="12-glorious.php">Test 12 - Glorious!</a><br/>
 		<a href="13-more-pixel-detection.php">Test 13 - ok, back to collisions</a><br/>
 
 <p/>
