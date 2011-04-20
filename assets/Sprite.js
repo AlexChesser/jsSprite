@@ -60,32 +60,19 @@ function newSprite(obj) {
 			Sprite.Yspd = dm[1] * Sprite.speed;
 		},
 		pointTo: function(pt){
-			
 			var xChk = Sprite.Xpos + (Sprite.width /2);
 			var yChk = Sprite.Ypos + (Sprite.height /2);				
 			var angle = Math.atan2(xChk-pt.Xpos,yChk-pt.Ypos);
 			var d = angle * (180 / Math.PI);
 			
-			// I hate this.  this is the most unreadable garbage EVER.
-			// is this how the pros do it? 
-			
-			if (d < -23 && d >= -68) {
-				Sprite.direction = 3;
-			} else if (d < -68 && d >= -113) {
-				Sprite.direction = 4;
-			} else if (d < -113 && d >= -158) {
-				Sprite.direction = 5;
-			} else if (d > 23 && d <= 68) {
-				Sprite.direction = 1;
-			} else if (d > 68 && d <= 113) {
-				Sprite.direction = 0;
-			} else if (d > 113 && d <= 158) {
-				Sprite.direction = 7;
-			} else if (Math.abs(d) <= 23) {
-				Sprite.direction = 2;
-			} else if (Math.abs(d) > 158) {
-				Sprite.direction = 6;
-			} 
+			if (d <  -23 && d >=  -68) { Sprite.direction = 3; } else 
+			if (d <  -68 && d >= -113) { Sprite.direction = 4; } else 
+			if (d < -113 && d >= -158) { Sprite.direction = 5; } else 
+			if (d >   23 && d <=   68) { Sprite.direction = 1; } else 
+			if (d >   68 && d <=  113) { Sprite.direction = 0; } else 
+			if (d >  113 && d <=  158) { Sprite.direction = 7; } else 
+			if (Math.abs(d) <= 23) 	   { Sprite.direction = 2; } else 
+			if (Math.abs(d) > 158) 	   { Sprite.direction = 6; } 
 			
 		},
 		drawFrame: function(){
@@ -114,10 +101,6 @@ function newSprite(obj) {
 			}
 		},
 		runTo: function(xy) {
-			// must add "approximation" to test within a few pixels
-			// at the moment. once the mino gets to his "spot" he 
-			// does the flipflop dance.
-			
 			var O2 = {	Xpos: 	xy[0],
 						Ypos:	xy[1],
 						width:	1,
@@ -156,18 +139,39 @@ function newSprite(obj) {
 		    left2 = obj.Xpos;
 		    right1 = Sprite.Xpos + Sprite.width;
 		    right2 = obj.Xpos + obj.width;
-		    top1 = Sprite.Ypoz;
+		    top1 = Sprite.Ypos; 
 		    top2 = obj.Ypos;
 		    bottom1 = Sprite.Ypos + Sprite.height;
 		    bottom2 = obj.Ypos + obj.height;
 
 		    if (bottom1 < top2) return false;
 		    if (top1 > bottom2) return false;
-
 		    if (right1 < left2) return false;
 		    if (left1 > right2) return false;
 
 		    return true;
+		},
+		detailCollision: function(obj){
+			// in the detail Collision, we've got to first grab the area of both images
+			// that are overlapping, then we'll check each pixel in that area and 
+			// compare
+			
+			// start the same way as a dirty collision
+		    var left1, left2;
+		    var right1, right2;
+		    var top1, top2;
+		    var bottom1, bottom2;
+
+		    left1 = Sprite.Xpos;
+		    left2 = obj.Xpos;
+		    right1 = Sprite.Xpos + Sprite.width;
+		    right2 = obj.Xpos + obj.width;
+		    top1 = Sprite.Ypoz;
+		    top2 = obj.Ypos;
+		    bottom1 = Sprite.Ypos + Sprite.height;
+		    bottom2 = obj.Ypos + obj.height;
+		    
+		    
 		},
 		step: function() {
 			var cf  = Sprite.frame; // the current frame we are on

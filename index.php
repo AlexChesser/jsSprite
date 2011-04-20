@@ -24,7 +24,9 @@
 		<a href="07-sort_zombies.php">Test 7 - Sort Zombies</a><br/>
 		<a href="08-mouse_move.php">Test 8 - Mouse move</a><br/>		
 		<a href="09-zombie-explosion.php">Test 9 - Zombie Explosion</a><br/>				
-		<a href="10-better-directions.php">Test 10 - better directions</a><br/>				
+		<a href="10-better-directions.php">Test 10 - better directions</a><br/>
+		<a href="11-first-read-pixels-in-an-image.php">Test 11 - heavy lifting before pixel perfect collision</a><br/>
+
 
 		
 	</body>
