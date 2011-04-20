@@ -172,6 +172,10 @@ function newSprite(obj) {
 		    bottom2 = obj.Ypos + obj.height;
 		    
 		    
+		    
+		    
+		    
+		    
 		},
 		step: function() {
 			var cf  = Sprite.frame; // the current frame we are on
