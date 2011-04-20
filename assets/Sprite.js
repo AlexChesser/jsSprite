@@ -180,48 +180,24 @@ function newSprite(obj) {
 		    if (right1 < left2) return false;
 		    if (left1 > right2) return false;
 		    
-		    if (bottom1 > bottom2) over_bottom = bottom2;
-		    else over_bottom = bottom1;
-		    
-		    if (top1 < top2) over_top = top2;
-		    else over_top = top1;
-
-		    if (right1 > right2) over_right = right2;
-		    else over_right = right1;
-
-		    if (left1 < left2) over_left = left2;
-		    else over_left = left1;
-		    
-		    console.log('ob:'+over_bottom+' ot: '+over_top+' or: '+over_right+' ol: '+over_left);
-		    
-		    /*
-			    // Now compute starting offsets into both objects' bitmaps:
-			    i = ((over_top - object1.y) * object1.width) + over_left;
-			    pixel1 = object1.frames[object1.curr_frame] + i;
-			
-			    j = ((over_top - object2.y) * object2.width) + over_left;
-			    pixel2 = object2.frames[object2.curr_frame] + j;
-			
-			  
-			    // Now start scanning the whole rectangle of overlap,
-			    // checking the corresponding pixel of each object's
-			    // bitmap to see if they're both non-zero:
-			
-			    for (i=0; i < over_height; I++) {
-			        for (j=0; j < over_width; j++) {
-			            if (*pixel1 > 0) && (*pixel2 > 0) return(1);
-			            pixel1++;
-			            pixel2++;
-			        }
-			        pixel1 += (object1->width - over_width);
-			        pixel2 += (object2->width - over_width);
-			    }
-			
-			    // Worst case!  We scanned through the whole darn rectangle of overlap 
-			    // and couldn't find a single colliding pixel!
-			
-			    return(0);
-		     */
+		    // 1. get the coordinates of the overlapped area for box object1
+		    // 2. get the coordinates of the overlapped area for this Sprite
+		    // 3. get the data for each into an array using GETIMAGEDATA
+		    //		eg:
+		    //		var sprite_overlap_image = Sprite.ctx.getImageData(SpriteArea.XStart, SpriteArea.YStart, SpriteArea.width, SpriteArea.height);
+		    //		var object_overlap_image = obj.ctx.getImageData(obj.XStart, obj.YStart, obj.width, obj.height);
+		    // 4. loop through each element in the area looking for a spot where they are both NOT the alpha color
+		    //
+		    //		eg:
+		    //		soid	= sprite_overlap_image.data;
+		    //		ooid	= object_overlap_image.data;
+		    //		for (idx in soid) {
+			//			if (soid[idx] != 0 && ooid[idx] != 0) {
+		    //				return true;
+		    // 			}
+			//		}
+		    //		return false;
+	
 		    
 		    
 		},
