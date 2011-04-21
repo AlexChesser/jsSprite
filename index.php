@@ -31,6 +31,13 @@
 
 <p/>
 
+<pre>
+// BUG NOTES - 
+//  live zombies sometimes underneath dead zombies 
+//  - draw all dead zombies first maybe?
+//  - put dead zombies in a different array? 
+</pre>
+
 This is some scribbles, don't have time to work on perfect collisions - but can doodle a circle  
 
 <canvas id='canvas' height=1000 width=1000></canvas>

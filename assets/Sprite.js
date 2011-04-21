@@ -22,6 +22,7 @@ function newSprite(obj) {
 		pause:		0,			// in order to use amazing frame rates, we need a pause for the animation.
 		direction: 	0,			// this is the direction (of 8) it is running in
 		dead:		0,
+		debug:		0,
 		init : function(c){
 			Sprite.canvas = c;
 			Sprite.canvas.setAttribute('width',  Sprite.width);
@@ -84,6 +85,12 @@ function newSprite(obj) {
 				var srcY 		= Sprite.direction * Sprite.height;
 				var srcWidth 	= Sprite.width;
 				var srcHeight 	= Sprite.height;
+				
+			    if (Sprite.debug == 1) {
+					// draw a bounding box for debuggery
+					Sprite.ctx.fillStyle = "rgb(100,0,100)";
+				 	Sprite.ctx.strokeRect(0,0,Sprite.width,Sprite.height);
+				}
 				
 				if (Sprite.RunToXY != 0) {
 					Sprite.runTo(Sprite.RunToXY);
@@ -179,6 +186,44 @@ function newSprite(obj) {
 		    if (top1 > bottom2) return false;
 		    if (right1 < left2) return false;
 		    if (left1 > right2) return false;
+		    
+		    
+		    // Ok, compute the rectangle of overlap:		    
+		    if (bottom1 > bottom2)  { 
+		    			over_bottom = bottom2; 
+		    } else { 	over_bottom = bottom1; }
+		 
+		    if (top1 < top2) { 
+		    			over_top = top2; 
+		    } else { 	over_top = top1; }
+
+		    if (right1 > right2) {
+		    		over_right = right2; 
+		    } else { 	over_right = right1; }
+
+		    if (left1 < left2) over_left = left2;
+		    else over_left = left1;
+
+		    if (Sprite.debug == 1) {
+		    	// again for the purposes of global debuggery I thought it'd be nice to be able to 
+		    	// draw the area of overlap, but without ruining all other tests
+		    	MainContext.fillStyle = "rgb(200,0,0)";
+		    	MainContext.fillRect (over_left, over_top, over_right-over_left, over_bottom-over_top);
+		    }
+		    overlap_width = over_right-over_left;
+		    overlap_height = over_bottom-over_top;
+		    
+		    if (Sprite.Xpos > obj.Xpos) {
+		    	// read the data start at the sprite's right side
+		    } else {
+		    	// read the data from the sprites left.
+		    }
+		    
+		    if (Sprite.Ypos > obj.Ypos) {
+		    	// read the data start at the sprite's bottom
+		    } else {
+		    	// read the data from the sprites top.
+		    }
 		    
 		    // 1. get the coordinates of the overlapped area for box object1
 		    // 2. get the coordinates of the overlapped area for this Sprite

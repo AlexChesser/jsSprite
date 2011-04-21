@@ -25,24 +25,28 @@
 	var msg1 = document.getElementById('message_1');
 	var msg2 = document.getElementById('message_2');
 	var msg3 = document.getElementById('message_3');	
-	
+
 		var canvas 		= document.getElementById('game');
 		var MainContext = canvas.getContext('2d');		
 		var m 			= newSprite(Minotaur());
 		var Zarr		= new Array();
+
 		
 		gameInit = function(){
 			m.canvas = document.createElement('canvas');
 			m.init(m.canvas);
-			
+			m.debug = 1;	
 			for (var i=0; i <= 0; i=i+1) {
 				// use only 1 zombie for hit testing
 				Zarr[i] = newSprite(Zombie());
+				
 				Zarr[i].canvas = document.createElement('canvas');
 				Zarr[i].Xpos = (Math.floor(Math.random()*400));
 				Zarr[i].Ypos = (Math.floor(Math.random()*400));
 				Zarr[i].init(Zarr[i].canvas);
 				Zarr[i].anim = Zarr[i].actions.stand;
+				Zarr[i].debug = 1; 
+				
 			};
 		};
 		runloop = function(m) {
