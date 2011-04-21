@@ -189,20 +189,17 @@ function newSprite(obj) {
 		    
 		    
 		    // Ok, compute the rectangle of overlap:		    
-		    if (bottom1 > bottom2)  { 
-		    			over_bottom = bottom2; 
-		    } else { 	over_bottom = bottom1; }
+		    if (bottom1 > bottom2)  {	over_bottom = bottom2; 
+		    } else { 					over_bottom = bottom1; }
 		 
-		    if (top1 < top2) { 
-		    			over_top = top2; 
-		    } else { 	over_top = top1; }
+		    if (top1 < top2) 		{	over_top = top2; 
+		    } else { 					over_top = top1; }
 
-		    if (right1 > right2) {
-		    		over_right = right2; 
-		    } else { 	over_right = right1; }
+		    if (right1 > right2) 	{	over_right = right2; 
+		    } else { 					over_right = right1; }
 
-		    if (left1 < left2) over_left = left2;
-		    else over_left = left1;
+		    if (left1 < left2)  	{	over_left = left2; 
+		    } else {					over_left = left1; }
 
 		    if (Sprite.debug == 1) {
 		    	// again for the purposes of global debuggery I thought it'd be nice to be able to 
