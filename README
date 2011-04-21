@@ -38,3 +38,35 @@ http://www.opengameart.org/content/3d-rock-tileset
 http://www.opengameart.org/content/broken-tower
 http://www.opengameart.org/content/classic-dungeon-walls
 http://www.opengameart.org/content/dungeon-wall-segments-hi-poly
+
+
+
+DEV PATH // TODO list
+==========================
+Here's a rough set of ideas I'd like to add:
+
+1) performance
+	- quad trees
+	- something about not using closures in the main game loop
+	- (thanks to devdave, the author of PING for these points)
+
+2) game mechanics 
+	- 'kill ability'
+	- kill counter
+	- other monsters
+	- 
+
+3) multiplayer / websockets
+	- set up a node.js server
+	- see who else is 'minotauring'
+	- bookmarklet-ification (load anywhere!)
+
+4) prettying up
+	- background tile-map
+
+5) Monetization
+	- sponsors ? 
+	- hall of fame / donorlists ? 
+	- adsense ?
+	- barter for a free copy of Portal2 ?
+	- meh ?
