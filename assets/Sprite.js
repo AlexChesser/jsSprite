@@ -212,21 +212,59 @@ function newSprite(obj) {
 		    
 		    if (Sprite.Xpos > obj.Xpos) {
 		    	// read the data start at the sprite's right side
+		    	var sprite_data_x_start = Sprite.Xpos	+Sprite.width	-overlap_width;
+		    	var obj_data_x_start 	= obj.Xpos;
 		    } else {
 		    	// read the data from the sprites left.
+		    	var sprite_data_x_start = Sprite.Xpos;
+		    	var obj_data_x_start 	= obj.Xpos	+obj.width			-overlap_width;		    	
 		    }
 		    
 		    if (Sprite.Ypos > obj.Ypos) {
-		    	// read the data start at the sprite's bottom
+		    	// read the data start at the sprite's right side
+		    	var sprite_data_y_start = Sprite.Ypos	+Sprite.height	-overlap_height;
+		    	var obj_data_y_start 	= obj.Ypos;
 		    } else {
-		    	// read the data from the sprites top.
+		    	// read the data from the sprites left.
+		    	var sprite_data_y_start = Sprite.Ypos;
+		    	var obj_data_y_start 	= obj.Ypos	+obj.height			-overlap_height;		    	
 		    }
+		    
 		    
 		    // 1. get the coordinates of the overlapped area for box object1
 		    // 2. get the coordinates of the overlapped area for this Sprite
 		    // 3. get the data for each into an array using GETIMAGEDATA
 		    //		eg:
-		    //		var sprite_overlap_image = Sprite.ctx.getImageData(SpriteArea.XStart, SpriteArea.YStart, SpriteArea.width, SpriteArea.height);
+		    var sprite_overlap_image = Sprite.ctx.getImageData(	sprite_data_x_start, 
+		    													sprite_data_y_start, 
+		    													overlap_width, 
+		    													overlap_height);
+		    var obj_overlap_image = obj.ctx.getImageData(		obj_data_x_start, 
+																obj_data_y_start, 
+																overlap_width, 
+																overlap_height);
+		    
+		    
+		    //soid	= sprite_overlap_image.data;
+		    soid = sprite_overlap_image;
+	    	GlobalWatchSOID = sprite_overlap_image;
+	    	GlobalWatchOOID = obj_overlap_image;	    	
+		    ooid	= obj_overlap_image;
+		    
+		    //MainContext.putImageData(sprite_overlap_image.data, 100, 100);
+		    //MainContext.putImageData(obj_overlap_image.data, 	400, 400);
+		    
+		    for (idx in soid.data) {
+		    	if (!isNaN(idx)) {
+			    	if (!(soid.data.idx === 0 && ooid.data.idx === 0)) {
+			    		//return true;
+			    		//console.log(idx + ' ' + soid.data[idx] + ' omg hit! ' + ooid.data[idx]);
+			    	}
+		    	}
+		    }
+		    return false;			
+		    
+		    
 		    //		var object_overlap_image = obj.ctx.getImageData(obj.XStart, obj.YStart, obj.width, obj.height);
 		    // 4. loop through each element in the area looking for a spot where they are both NOT the alpha color
 		    //

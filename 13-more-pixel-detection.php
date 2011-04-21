@@ -30,7 +30,8 @@
 		var MainContext = canvas.getContext('2d');		
 		var m 			= newSprite(Minotaur());
 		var Zarr		= new Array();
-
+		var GlobalWatchSOID;
+		var GlobalWatchOOID;		
 		
 		gameInit = function(){
 			m.canvas = document.createElement('canvas');
