@@ -26,7 +26,7 @@ else {
 
 var Game = {
 		gameTimer: 			0, //holds id of main game timer
-		fps: 				250, //target fps for game loop
+		fps: 				25, //target fps for game loop
 		m:					0,
 		initGame: function() { //initialize game
 			Game.fps = 	5; //set target fps to 250

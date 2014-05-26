@@ -6,6 +6,8 @@ function newSprite(obj) {
 		ctx:		0,
 		img:		0,			// this becomes imagedata		
 		img_src:	obj.img,	// the text path of the file for laoding
+		offsetX: 	(obj.offsetX === undefined) ? 0 : obj.offsetX,
+		offsetY: 	(obj.offsetY === undefined) ? 0 : obj.offsetY,
 		cols: 		obj.cols,
 		rows: 		obj.rows,
 		width: 		obj.width,
@@ -16,6 +18,7 @@ function newSprite(obj) {
 		Yspd:		0,
 		speed:		obj.speed,
 		RunToXY:	0,
+		animated: 	(obj.animated === undefined) ? true : obj.animated, 
 		actions:	obj.anim,	// this is the list of animations the sprite has
 		anim:		0,			// this is the current animation the sprite is running
 		frame: 		0,			// this is the current frame of the animation
@@ -28,9 +31,9 @@ function newSprite(obj) {
 			Sprite.canvas.setAttribute('width',  Sprite.width);
 			Sprite.canvas.setAttribute('height', Sprite.height);
 			Sprite.ctx = Sprite.canvas.getContext('2d');
-			Sprite.loadImage(); 
+			Sprite.loadImage();
 			Sprite.anim = Sprite.actions.stand;
-			Sprite.direction = 6;
+			//Sprite.direction = 6;
 		},
 		loadImage: function(){  			
 			Sprite.img = new Image();  		
@@ -81,8 +84,8 @@ function newSprite(obj) {
 			//MainContext.clearRect(Sprite.Xpos, Sprite.Ypos, Sprite.width, Sprite.height);
 			if(Sprite.is_ready){ //do not draw if sprite is not ready
 				//calculate values for sprite based on animation
-				var srcX 		= Sprite.anim.start + (Sprite.frame * Sprite.width);
-				var srcY 		= Sprite.direction * Sprite.height;
+				var srcX 		= Sprite.anim.start + (Sprite.frame * Sprite.width) +Sprite.offsetX;
+				var srcY 		= Sprite.direction * Sprite.height+Sprite.offsetY;
 				var srcWidth 	= Sprite.width;
 				var srcHeight 	= Sprite.height;
 				
