@@ -18,7 +18,7 @@ function Tile() {
 		direction	: 0,
 		debug		: 1,
 		anim		: {
-			stand: 	{name: 'stand',  start:  0,	length: 0, end: 'hold'	, playdir: 0}
+			stand: 	{name: 'stand',  start:  0,	length: 4, end: 'reverse'	, playdir: 0}
 		}
 	};
 }
@@ -31,9 +31,10 @@ function Map(){
 
 Map.prototype.init = function(){
 	
-	for (var i = 0; i < 40; i++){
-	    for (j = 40; j >= 0; j--){  // Changed loop condition here.
+	for (var i = 40; i >= 0; i--){
+	    for (j = 0; j < 40; j++){  // Changed loop condition here.
 	    	var t = new Tile().t;
+	    	t.frame = Math.floor(Math.random() * 4 + 1);
 	        var tile = newSprite(t);
 			tile.canvas = document.createElement('canvas');
 			tile.Xpos = (j * t.hw) + (i * t.hw)
