@@ -4,24 +4,25 @@ var rpg = {
 rpg.Map =  {
 	get_opts : function(){
 	  var opts = {
-	    'seed'              : new Date(),
-	    'n_rows'            : 25, //          # must be an odd number
-	    'n_cols'            : 50, //         # must be an odd number
-	    'dungeon_layout'    : 'None',
-	    'room_min'          : 3,   //        # minimum room size
-	    'room_max'          : 5,     //      # maximum room size
-	    'room_layout'       : 'Scattered', // # Packed, Scattered
-	    'corridor_layout'   : 'Bent', //
-	    'remove_deadends'   : 50,       //   # percentage
-	    'add_stairs'        : 2,          // # number of stairs
-	    'map_style'         : 'Standard',
-	    'cell_size'         : 18,         // # pixels
-	    "cells"				: [],
-	    "rooms"			: []
+		'seed'			  	: new Date(),
+		'n_rows'			: 25, //		  # must be an odd number
+		'n_cols'			: 50, //		 # must be an odd number
+		'dungeon_layout'	: 'None',
+		'room_min'		  	: 3,   //		# minimum room size
+		'room_max'		  	: 5,	 //	  # maximum room size
+		'room_layout'	   	: 'Scattered', // # Packed, Scattered
+		'corridor_layout'   : 'Bent', //
+		'remove_deadends'	: 50,	   //   # percentage
+		'add_stairs'		: 2,		  // # number of stairs
+		'map_style'		 	: 'Standard',
+		'cell_size'		 	: 18,		 // # pixels
+		"cells"				: [],
+		"rooms"				: []
 	  };
 	  return opts;
 	},
-	maps: [],
+	currentfloor: {},
+	floors: [],
 	// Algorithm based on http://donjon.bin.sh/fantasy/dungeon/about/dungeon.pl
 	// rewritten in javascript
 	generate: function(d){
@@ -47,6 +48,9 @@ rpg.Map =  {
 		this.empty_dungeon(d);
 		this.init_rooms(d);
 		this.open_rooms(d);
+		this.corridors(d);
+		this.currentfloor = d;
+		this.floors.push(d);
 		this.draw(d)
 	},
 	// create a multidimensional dungeon array
@@ -55,7 +59,7 @@ rpg.Map =  {
 		for (var r = 0; r <= d.n_rows; r++) {
 			d.cells.push([]);
 			for (var c = 0; c <= d.n_cols; c++) {
-				d.cells[r].push({'type' : 'SOLID', 'marker' : "."});
+				d.cells[r].push({'type' : 'SOLID', 'marker' : ".", x: r, y: c});
 			}
 		}
 	},
@@ -65,7 +69,7 @@ rpg.Map =  {
 		} else {
 			this.scatter_rooms(d);
 		}
-	},	
+	},
 	scatter_rooms: function(d){
 		var n_rooms = this.alloc_rooms(d);
 		for (var i = 0; i < n_rooms; i++) {
@@ -96,9 +100,9 @@ rpg.Map =  {
 	sound_room: function(d, b) {
 		for (var r = b.r1; r <= b.r2; r++) {
 			for (var c = b.c1; c <= b.c2; c++) {
-      			if (d.cells[r][c].type !== 'SOLID') {
-        			return true;
-      			}
+	  			if (d.cells[r][c].type !== 'SOLID') {
+					return true;
+	  			}
 			}
 		}
 		return false;
@@ -174,23 +178,23 @@ rpg.Map =  {
 				for(var c = from+1; c < to; c+=2){
 					// TODO: check that it fits
 					switch(dir){
-						case 'n':
-						case 's':
-							vx.push({x: base, y: c});
+						case 'north':
+						case 'south':
+							vx.push({x: base, y: c, dir: dir});
 							break;
-						case 'e':
-						case 'w':
-							vx.push({x: c, y: base});
+						case 'east':
+						case 'west':
+							vx.push({x: c, y: base, dir: dir});
 							break;
 					}
 					
 				}
 			}
 		}
-		push_valid((r.north >= 3), r.north, r.west, r.east, 'n');
-		push_valid((r.south <= d.n_rows-3), r.south, r.west, r.east, 's');
-		push_valid((r.east >= 3), r.east, r.north, r.south, 'e');
-		push_valid((r.west <= d.n_cols - 3), r.west, r.north, r.south, 'w');
+		push_valid((r.north >= 3), r.north, r.west, r.east, 'north');
+		push_valid((r.south <= d.n_rows-3), r.south, r.west, r.east, 'south');
+		push_valid((r.east >= 3), r.east, r.north, r.south, 'east');
+		push_valid((r.west <= d.n_cols - 3), r.west, r.north, r.south, 'west');
 		return vx;
 	},
 	open_room: function(d, r){
@@ -203,80 +207,110 @@ rpg.Map =  {
 			// x = exit
 			var x = vxs[vx];
 			d.cells[x.x][x.y].marker = "+"
+			d.cells[x.x][x.y].type = "DOOR"
 			r.exits.push(x);
 		}
-/*
-my ($dungeon,$room) = @_;
-  my @list = &door_sills($dungeon,$room);
-     return $dungeon unless (@list);
-  my $n_opens = &alloc_opens($dungeon,$room);
-  my $cell = $dungeon->{'cell'};
+	},
+	corridors: function(d){
+		for (i in d.rooms) {
+			var r = d.rooms[i];
+			for(j in r.exits){
+				var x = r.exits[j];
+				//console.log("starting tunnel")
+				//console.log(x)
+				this.tunnel(d, x);
+			}
+		}
+	},
+	dir_x : {north: -1, south: 1, west: 0, east: 0},
+	dir_y : {north: 0, south: 0, west: -1, east: 1},
+	tunnel: function(d, x){
+		//console.log("next set in dir"+x.dir)
 
-  my $i; for ($i = 0; $i < $n_opens; $i++) {
-    my $sill = splice(@list,int(rand(@list)),1);
-       last unless ($sill);
-    my $door_r = $sill->{'door_r'};
-    my $door_c = $sill->{'door_c'};
-    my $door_cell = $cell->[$door_r][$door_c];
-       redo if ($door_cell & $DOORSPACE);
+		var next = {
+			x: x.x + this.dir_x[x.dir], 
+			y: x.y + this.dir_y[x.dir],
+			dir: x.dir
+		}
+		//console.log(next)
+		var cell = this.get_cell(d, next.x, next.y);
+		if(cell.type === "SOLID"){
+			//next.dir = this.change_dir(next.dir);
+			//this.tunnel(d, next);
 
-    my $out_id; if ($out_id = $sill->{'out_id'}) {
-      my $connect = join(',',(sort($room->{'id'},$out_id)));
-      redo if ($dungeon->{'connect'}{$connect}++);
-    }
-    my $open_r = $sill->{'sill_r'};
-    my $open_c = $sill->{'sill_c'};
-    my $open_dir = $sill->{'dir'};
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # open door
-
-    my $x; for ($x = 0; $x < 3; $x++) {
-      my $r = $open_r + ($di->{$open_dir} * $x);
-      my $c = $open_c + ($dj->{$open_dir} * $x);
-
-      $cell->[$r][$c] &= ~ $PERIMETER;
-      $cell->[$r][$c] |= $ENTRANCE;
-    }
-    my $door_type = &door_type();
-    my $door = { 'row' => $door_r, 'col' => $door_c };
-
-    if ($door_type == $ARCH) {
-      $cell->[$door_r][$door_c] |= $ARCH;
-      $door->{'key'} = 'arch'; $door->{'type'} = 'Archway';
-    } elsif ($door_type == $DOOR) {
-      $cell->[$door_r][$door_c] |= $DOOR;
-      $cell->[$door_r][$door_c] |= (ord('o') << 24);
-      $door->{'key'} = 'open'; $door->{'type'} = 'Unlocked Door';
-    } elsif ($door_type == $LOCKED) {
-      $cell->[$door_r][$door_c] |= $LOCKED;
-      $cell->[$door_r][$door_c] |= (ord('x') << 24);
-      $door->{'key'} = 'lock'; $door->{'type'} = 'Locked Door';
-    } elsif ($door_type == $TRAPPED) {
-      $cell->[$door_r][$door_c] |= $TRAPPED;
-      $cell->[$door_r][$door_c] |= (ord('t') << 24);
-      $door->{'key'} = 'trap'; $door->{'type'} = 'Trapped Door';
-    } elsif ($door_type == $SECRET) {
-      $cell->[$door_r][$door_c] |= $SECRET;
-      $cell->[$door_r][$door_c] |= (ord('s') << 24);
-      $door->{'key'} = 'secret'; $door->{'type'} = 'Secret Door';
-    } elsif ($door_type == $PORTC) {
-      $cell->[$door_r][$door_c] |= $PORTC;
-      $cell->[$door_r][$door_c] |= (ord('#') << 24);
-      $door->{'key'} = 'portc'; $door->{'type'} = 'Portcullis';
-    }
-    $door->{'out_id'} = $out_id if ($out_id);
-    push(@{ $room->{'door'}{$open_dir} },$door) if ($door);
-  }
-  return $dungeon;
-  */
-
-
+			cell.type="HALL";
+			cell.marker="H";
+		}
+		
+		if(	cell.type === "OOB"
+			|| cell.type === "PERIMETER"){
+			next.dir = this.change_dir(next.dir);
+			console.log("changed dir");
+		}
+		// TODO: consider continue conditions
+		//	stop if: 
+		//	1) the hallway is beside another hallway other than a cell behind it
+		//	2) the hallway is beside a doorway other than a cell behind it
+		if(this.disconnected(d, next, x)){
+			this.tunnel(d, next);
+		}
+		
+	},
+	change_dir: function(dir){
+		switch(dir){
+			case 'north':
+			case 'south':
+				return ['east', 'west'][this.randrange(0,1)]
+				break;
+			case 'east':
+			case 'west':
+				return ['north', 'south'][this.randrange(0,1)]
+				break;
+		}
+	},
+	get_cell: function(d, x, y){
+		if(x >= d.n_rows-1 || x < 0 ||
+			y >= d.n_cols-1 || y < 0){
+			return { 'type' : "OOB" }
+		}
+		return d.cells[x][y];
+	},
+	get_cells: function(d, cell, l){
+		// get the cells in all 4 directions
+		var cells = { 
+			'north' : this.get_cell(d, cell.x-1, cell.y),
+			'south'	: this.get_cell(d, cell.x+1, cell.y), 
+			'west'	: this.get_cell(d, cell.x, cell.y+1),
+			'east' 	: this.get_cell(d, cell.x, cell.y-1)
+		};
+		skip = {
+			'north' : 'south', 'south': 'north',
+			'west'	: 'east',	'east': 'west' 
+		};
+		delete cells[skip[l.dir]];
+		for(i in cells){
+			if(cells[i].type === "OOB"){
+				delete cells[i]
+			}
+		}
+		return cells;
+	},
+	disconnected: function(d, cell, l){
+		var cells = this.get_cells(d, cell, l);
+		if(Object.keys(cells).length == 0){
+			return false
+		};
+		for(i in cells){
+			var near = cells[i];
+			if(near.type == "DOOR"){
+				return false;
+			}
+		}
+		return true;
 	},
 	draw: function(d){
-
+		console.log("   |----|----|----|----|----|----|----|----|----|----|");
 		for(var r in d.cells){
-
 			var line = ("0"+r).substr(-1) + ": ";
 			for (var c in d.cells[r]){
 				line += d.cells[r][c].marker;
