@@ -1,3 +1,391 @@
+// javascript-astar 0.2.0
+// http://github.com/bgrins/javascript-astar
+// Freely distributable under the MIT License.
+// Implements the astar search algorithm in javascript using a Binary Heap.
+// Includes Binary Heap (with modifications) from Marijn Haverbeke.
+// http://eloquentjavascript.net/appendix2.html
+
+(function(definition) {
+    if(typeof module === 'object' && typeof module.exports === 'object') {
+        module.exports = definition();
+    } else if(typeof define === 'function' && define.amd) {
+        define([], definition);
+    } else {
+        var exports = definition();
+        window.astar = exports.astar;
+        window.Graph = exports.Graph;
+    }
+})(function() {
+	var astar = {
+	    init: function(grid) {
+	        for(var x = 0, xl = grid.length; x < xl; x++) {
+	            for(var y = 0, yl = grid[x].length; y < yl; y++) {
+	                var node = grid[x][y];
+	                node.f = 0;
+	                node.g = 0;
+	                node.h = 0;
+	                node.cost = node.type;
+	                node.visited = false;
+	                node.closed = false;
+	                node.parent = null;
+	            }
+	        }
+	    },
+	    heap: function() {
+	        return new BinaryHeap(function(node) {
+	            return node.f;
+	        });
+	    },
+
+	    // astar.search
+	    // supported options:
+	    // {
+	    //   heuristic: heuristic function to use
+	    //   diagonal: boolean specifying whether diagonal moves are allowed
+	    //   closest: boolean specifying whether to return closest node if
+	    //            target is unreachable
+	    // }
+	    search: function(grid, start, end, options) {
+	        astar.init(grid);
+
+	        options = options || {};
+	        var heuristic = options.heuristic || astar.manhattan;
+	        var diagonal = !!options.diagonal;
+	        var closest = options.closest || false;
+	        var openHeap = astar.heap();
+	        var start = grid[start.x][start.y],
+	        	end = grid[end.x][end.y]
+
+	        // set the start node to be the closest if required
+	        var closestNode = start;
+
+	        start.h = heuristic(start, end);
+
+	        function pathTo(node){
+	            var curr = node;
+	            var path = [];
+	            while(curr.parent) {
+	                path.push(curr);
+	                curr = curr.parent;
+	            }
+	            return path.reverse();
+	        }
+
+
+	        openHeap.push(start);
+
+	        while(openHeap.size() > 0) {
+
+	            // Grab the lowest f(x) to process next.  Heap keeps this sorted for us.
+	            var currentNode = openHeap.pop();
+
+	            // End case -- result has been found, return the traced path.
+	            if(currentNode.x === end.x 
+	            	&& currentNode.y === end.y) {
+	                return pathTo(currentNode);
+	            }
+
+	            // Normal case -- move currentNode from open to closed, process each of its neighbors.
+	            currentNode.closed = true;
+
+	            // Find all neighbors for the current node. Optionally find diagonal neighbors as well (false by default).
+	            var neighbors = astar.neighbors(grid, currentNode, diagonal);
+
+	            for(var i=0, il = neighbors.length; i < il; i++) {
+	                var neighbor = neighbors[i];
+
+	                if(neighbor.closed || neighbor.isWall()) {
+	                    // Not a valid node to process, skip to next neighbor.
+	                    continue;
+	                }
+	                // The g score is the shortest distance from start to current node.
+	                // We need to check if the path we have arrived at this neighbor is the shortest one we have seen yet.
+	                var gScore = currentNode.g + neighbor.cost;
+	                var beenVisited = neighbor.visited;
+
+	                if(!beenVisited || gScore < neighbor.g) {
+
+	                    // Found an optimal (so far) path to this node.  Take score for node to see how good it is.
+	                    neighbor.visited = true;
+	                    neighbor.parent = currentNode;
+	                    neighbor.h = neighbor.h || heuristic(neighbor, end);
+	                    neighbor.g = gScore;
+	                    neighbor.f = neighbor.g + neighbor.h;
+
+	                    if (closest) {
+	                        // If the neighbour is closer than the current closestNode or if it's equally close but has
+	                        // a cheaper path than the current closest node then it becomes the closest node
+	                        if (neighbor.h < closestNode.h || (neighbor.h === closestNode.h && neighbor.g < closestNode.g)) {
+	                            closestNode = neighbor;
+	                        }
+	                    }
+
+
+
+	                    if (!beenVisited) {
+	                        // Pushing to heap will put it in proper place based on the 'f' value.
+	                        openHeap.push(neighbor);
+	                    }
+	                    else {
+	                        // Already seen the node, but since it has been rescored we need to reorder it in the heap
+	                        openHeap.rescoreElement(neighbor);
+	                    }
+	                }
+	            }
+	        }
+
+	        if (closest) {
+	            return pathTo(closestNode);
+	        }
+
+	        // No result was found - empty array signifies failure to find path.
+	        return [];
+	    },
+	    manhattan: function(pos0, pos1) {
+	        // See list of heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
+	        var d1 = Math.abs (pos1.x - pos0.x);
+	        var d2 = Math.abs (pos1.y - pos0.y);
+	        return d1 + d2;
+	    },
+	    diagonal: function(pos0, pos1) {
+	        var D = 1;
+	        var D2 = Math.sqrt(2);
+	        var d1 = Math.abs (pos1.x - pos0.x);
+	        var d2 = Math.abs (pos1.y - pos0.y);
+	        return (D * (d1 + d2)) + ((D2 - (2 * D)) * Math.min(d1, d2));
+	    },
+	    neighbors: function(grid, node, diagonals) {
+	        var ret = [];
+	        var x = node.x;
+	        var y = node.y;
+
+	        // West
+	        if(grid[x-1] && grid[x-1][y]) {
+	            ret.push(grid[x-1][y]);
+	        }
+
+	        // East
+	        if(grid[x+1] && grid[x+1][y]) {
+	            ret.push(grid[x+1][y]);
+	        }
+
+	        // South
+	        if(grid[x] && grid[x][y-1]) {
+	            ret.push(grid[x][y-1]);
+	        }
+
+	        // North
+	        if(grid[x] && grid[x][y+1]) {
+	            ret.push(grid[x][y+1]);
+	        }
+
+	        if (diagonals) {
+
+	            // Southwest
+	            if(grid[x-1] && grid[x-1][y-1]) {
+	                ret.push(grid[x-1][y-1]);
+	            }
+
+	            // Southeast
+	            if(grid[x+1] && grid[x+1][y-1]) {
+	                ret.push(grid[x+1][y-1]);
+	            }
+
+	            // Northwest
+	            if(grid[x-1] && grid[x-1][y+1]) {
+	                ret.push(grid[x-1][y+1]);
+	            }
+
+	            // Northeast
+	            if(grid[x+1] && grid[x+1][y+1]) {
+	                ret.push(grid[x+1][y+1]);
+	            }
+
+	        }
+
+	        return ret;
+	    }
+	};
+
+	function Graph(grid) {
+	    var nodes = [];
+
+	    for (var x = 0; x < grid.length; x++) {
+	        nodes[x] = [];
+
+	        for (var y = 0, row = grid[x]; y < row.length; y++) {
+	            nodes[x][y] = new GraphNode(x, y, row[y]);
+	        }
+	    }
+
+	    this.input = grid;
+	    this.nodes = nodes;
+	}
+
+	Graph.prototype.toString = function() {
+	    var graphString = "\n";
+	    var nodes = this.nodes;
+	    var rowDebug, row, y, l;
+	    for (var x = 0, len = nodes.length; x < len; x++) {
+	        rowDebug = "";
+	        row = nodes[x];
+	        for (y = 0, l = row.length; y < l; y++) {
+	            rowDebug += row[y].type + " ";
+	        }
+	        graphString = graphString + rowDebug + "\n";
+	    }
+	    return graphString;
+	};
+
+	function GraphNode(x, y, type) {
+	    this.data = { };
+	    this.x = x;
+	    this.y = y;
+	    this.pos = {
+	        x: x,
+	        y: y
+	    };
+	    this.type = type;
+	}
+
+	GraphNode.prototype.toString = function() {
+	    return "[" + this.x + " " + this.y + "]";
+	};
+
+	GraphNode.prototype.isWall = function() {
+	    return this.type === 0;
+	};
+
+	function BinaryHeap(scoreFunction){
+	    this.content = [];
+	    this.scoreFunction = scoreFunction;
+	}
+
+	BinaryHeap.prototype = {
+	    push: function(element) {
+	        // Add the new element to the end of the array.
+	        this.content.push(element);
+
+	        // Allow it to sink down.
+	        this.sinkDown(this.content.length - 1);
+	    },
+	    pop: function() {
+	        // Store the first element so we can return it later.
+	        var result = this.content[0];
+	        // Get the element at the end of the array.
+	        var end = this.content.pop();
+	        // If there are any elements left, put the end element at the
+	        // start, and let it bubble up.
+	        if (this.content.length > 0) {
+	            this.content[0] = end;
+	            this.bubbleUp(0);
+	        }
+	        return result;
+	    },
+	    remove: function(node) {
+	        var i = this.content.indexOf(node);
+
+	        // When it is found, the process seen in 'pop' is repeated
+	        // to fill up the hole.
+	        var end = this.content.pop();
+
+	        if (i !== this.content.length - 1) {
+	            this.content[i] = end;
+
+	            if (this.scoreFunction(end) < this.scoreFunction(node)) {
+	                this.sinkDown(i);
+	            }
+	            else {
+	                this.bubbleUp(i);
+	            }
+	        }
+	    },
+	    size: function() {
+	        return this.content.length;
+	    },
+	    rescoreElement: function(node) {
+	        this.sinkDown(this.content.indexOf(node));
+	    },
+	    sinkDown: function(n) {
+	        // Fetch the element that has to be sunk.
+	        var element = this.content[n];
+
+	        // When at 0, an element can not sink any further.
+	        while (n > 0) {
+
+	            // Compute the parent element's index, and fetch it.
+	            var parentN = ((n + 1) >> 1) - 1,
+	                parent = this.content[parentN];
+	            // Swap the elements if the parent is greater.
+	            if (this.scoreFunction(element) < this.scoreFunction(parent)) {
+	                this.content[parentN] = element;
+	                this.content[n] = parent;
+	                // Update 'n' to continue at the new position.
+	                n = parentN;
+	            }
+
+	            // Found a parent that is less, no need to sink any further.
+	            else {
+	                break;
+	            }
+	        }
+	    },
+	    bubbleUp: function(n) {
+	        // Look up the target element and its score.
+	        var length = this.content.length,
+	            element = this.content[n],
+	            elemScore = this.scoreFunction(element);
+
+	        while(true) {
+	            // Compute the indices of the child elements.
+	            var child2N = (n + 1) << 1, child1N = child2N - 1;
+	            // This is used to store the new position of the element,
+	            // if any.
+	            var swap = null;
+	            var child1Score;
+	            // If the first child exists (is inside the array)...
+	            if (child1N < length) {
+	                // Look it up and compute its score.
+	                var child1 = this.content[child1N];
+	                child1Score = this.scoreFunction(child1);
+
+	                // If the score is less than our element's, we need to swap.
+	                if (child1Score < elemScore){
+	                    swap = child1N;
+	                }
+	            }
+
+	            // Do the same checks for the other child.
+	            if (child2N < length) {
+	                var child2 = this.content[child2N],
+	                    child2Score = this.scoreFunction(child2);
+	                if (child2Score < (swap === null ? elemScore : child1Score)) {
+	                    swap = child2N;
+	                }
+	            }
+
+	            // If the element needs to be moved, swap it, and continue.
+	            if (swap !== null) {
+	                this.content[n] = this.content[swap];
+	                this.content[swap] = element;
+	                n = swap;
+	            }
+
+	            // Otherwise, we are done.
+	            else {
+	                break;
+	            }
+	        }
+	    }
+	};
+
+	return {
+	    astar: astar,
+	    Graph: Graph
+	};
+
+});
+
 var rpg = {
 	Map : {}
 }
@@ -23,6 +411,14 @@ rpg.Map =  {
 	},
 	currentfloor: {},
 	floors: [],
+	type: {
+		"HALL" 		: 0,
+		"ESPACE" 	: 40,
+		"SOLID"		: 1,
+		"DOOR"		: 30,
+		"PERIMETER" : 50,
+		"OOB"		: 99
+	},
 	// Algorithm based on http://donjon.bin.sh/fantasy/dungeon/about/dungeon.pl
 	// rewritten in javascript
 	generate: function(d){
@@ -59,7 +455,15 @@ rpg.Map =  {
 		for (var r = 0; r <= d.n_rows; r++) {
 			d.cells.push([]);
 			for (var c = 0; c <= d.n_cols; c++) {
-				d.cells[r].push({'type' : 'SOLID', 'marker' : ".", x: r, y: c});
+				d.cells[r].push({
+					'type' : this.type.SOLID, 
+					'marker' : ".", 
+					x: r, 
+					y: c,
+					isWall: function(){
+						this.type > 3
+					}
+				});
 			}
 		}
 	},
@@ -100,7 +504,7 @@ rpg.Map =  {
 	sound_room: function(d, b) {
 		for (var r = b.r1; r <= b.r2; r++) {
 			for (var c = b.c1; c <= b.c2; c++) {
-	  			if (d.cells[r][c].type !== 'SOLID') {
+	  			if (d.cells[r][c].type !== this.type.SOLID) {
 					return true;
 	  			}
 			}
@@ -133,20 +537,6 @@ rpg.Map =  {
 			//console.log(b)
 			return;
 		};
-
-		// we can now add this room
-		for (var r = b.r1; r <= b.r2; r++){
-			for (var c = b.c1; c <= b.c2; c++){
-				if(	[b.r1, b.r2].indexOf(r) != -1
-				||	[b.c1, b.c2].indexOf(c) != -1){
-					d.cells[r][c].marker = "#";
-					d.cells[r][c].type = "PERIMETER";
-				} else {
-					d.cells[r][c].marker = " ";
-					d.cells[r][c].type = "ESPACE";
-				}
-			}
-		}
 		b.room_id = d.n_rooms++;
 		function room_data(b){
 			return {
@@ -159,6 +549,20 @@ rpg.Map =  {
 			}
 		}
 		d.rooms.push(room_data(b));
+		// we can now add this room
+		for (var r = b.r1; r <= b.r2; r++){
+			for (var c = b.c1; c <= b.c2; c++){
+				if(	[b.r1, b.r2].indexOf(r) != -1
+				||	[b.c1, b.c2].indexOf(c) != -1){
+					d.cells[r][c].marker = "#";
+					d.cells[r][c].type = this.type.PERIMETER;
+				} else {
+					d.cells[r][c].marker = " ";
+					d.cells[r][c].type = this.type.ESPACE;
+				}
+			}
+		}
+
 	},
 	open_rooms: function(d){
 		for(var r in d.rooms){
@@ -207,111 +611,44 @@ rpg.Map =  {
 			// x = exit
 			var x = vxs[vx];
 			d.cells[x.x][x.y].marker = "+"
-			d.cells[x.x][x.y].type = "DOOR"
+			d.cells[x.x][x.y].type = this.type.DOOR
+			x.room_id = r.id;
 			r.exits.push(x);
 		}
+	},
+	// get random exit in another room.
+	random_exit: function(d, rm){
+		var random_room = rm;
+		while (random_room.id === rm.id) {
+			var rid = this.randrange(0, d.rooms.length -1);
+			random_room = d.rooms[rid]
+		}
+		var x_idx = this.randrange(0, random_room.exits.length-1);
+		var x = random_room.exits[x_idx];
+		return x;
+
 	},
 	corridors: function(d){
 		for (i in d.rooms) {
 			var r = d.rooms[i];
 			for(j in r.exits){
-				var x = r.exits[j];
-				//console.log("starting tunnel")
-				//console.log(x)
-				this.tunnel(d, x);
+				var from = r.exits[j],
+					to = this.random_exit(d, r);
+				var path = astar.search(d.cells, from, to)
+				// remove the last cell in the A* so we don't overwrite the door
+				path.pop();
+				for(k in path){
+					var cell = path[k];
+					cell.marker = "H";
+					cell.type = this.type.HALL;
+				}
 			}
 		}
-	},
-	dir_x : {north: -1, south: 1, west: 0, east: 0},
-	dir_y : {north: 0, south: 0, west: -1, east: 1},
-	tunnel: function(d, x){
-		//console.log("next set in dir"+x.dir)
-
-		var next = {
-			x: x.x + this.dir_x[x.dir], 
-			y: x.y + this.dir_y[x.dir],
-			dir: x.dir
-		}
-		//console.log(next)
-		var cell = this.get_cell(d, next.x, next.y);
-		if(cell.type === "SOLID"){
-			//next.dir = this.change_dir(next.dir);
-			//this.tunnel(d, next);
-
-			cell.type="HALL";
-			cell.marker="H";
-		}
-		
-		if(	cell.type === "OOB"
-			|| cell.type === "PERIMETER"){
-			next.dir = this.change_dir(next.dir);
-			console.log("changed dir");
-		}
-		// TODO: consider continue conditions
-		//	stop if: 
-		//	1) the hallway is beside another hallway other than a cell behind it
-		//	2) the hallway is beside a doorway other than a cell behind it
-		if(this.disconnected(d, next, x)){
-			this.tunnel(d, next);
-		}
-		
-	},
-	change_dir: function(dir){
-		switch(dir){
-			case 'north':
-			case 'south':
-				return ['east', 'west'][this.randrange(0,1)]
-				break;
-			case 'east':
-			case 'west':
-				return ['north', 'south'][this.randrange(0,1)]
-				break;
-		}
-	},
-	get_cell: function(d, x, y){
-		if(x >= d.n_rows-1 || x < 0 ||
-			y >= d.n_cols-1 || y < 0){
-			return { 'type' : "OOB" }
-		}
-		return d.cells[x][y];
-	},
-	get_cells: function(d, cell, l){
-		// get the cells in all 4 directions
-		var cells = { 
-			'north' : this.get_cell(d, cell.x-1, cell.y),
-			'south'	: this.get_cell(d, cell.x+1, cell.y), 
-			'west'	: this.get_cell(d, cell.x, cell.y+1),
-			'east' 	: this.get_cell(d, cell.x, cell.y-1)
-		};
-		skip = {
-			'north' : 'south', 'south': 'north',
-			'west'	: 'east',	'east': 'west' 
-		};
-		delete cells[skip[l.dir]];
-		for(i in cells){
-			if(cells[i].type === "OOB"){
-				delete cells[i]
-			}
-		}
-		return cells;
-	},
-	disconnected: function(d, cell, l){
-		var cells = this.get_cells(d, cell, l);
-		if(Object.keys(cells).length == 0){
-			return false
-		};
-		for(i in cells){
-			var near = cells[i];
-			if(near.type == "DOOR"){
-				return false;
-			}
-		}
-		return true;
 	},
 	draw: function(d){
-		console.log("   |----|----|----|----|----|----|----|----|----|----|");
+		console.log("    0----5----|----5----|----5----|----5----|----5----|");
 		for(var r in d.cells){
-			var line = ("0"+r).substr(-1) + ": ";
+			var line = ("0"+r).substr(-2) + ": ";
 			for (var c in d.cells[r]){
 				line += d.cells[r][c].marker;
 			}
