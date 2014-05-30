@@ -441,9 +441,9 @@ rpg.Map =  {
 	type: {
 		"HALL" 		: { a: 0, tile: "A5", x: 32, y: 11*32 },
 		"ESPACE" 	: { a: 40, tile: "A5", x: 5*32, y: 6*32 },
-		"SOLID"		: { a: 1, tile: "A5", x: 0, y: 0 },
+		"SOLID"		: { a: 1, tile: "A4", x: 11*32, y: 4*32 },
 		"DOOR"		: { a: 40, tile: "DR", x: 0, y: 0 },
-		"PERIMETER" : { a: 40, tile: "A4", x: 0, y: 5*32 },
+		"PERIMETER" : { a: 40, tile: "A4", x: 10*32, y: 9*32 },
 		"OOB"		: { a: 40, tile: "A5", x: 0, y: 0 }
 	},
 	// Algorithm based on http://donjon.bin.sh/fantasy/dungeon/about/dungeon.pl
