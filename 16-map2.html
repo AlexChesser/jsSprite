@@ -1,0 +1,45 @@
+<?php
+//
+//  
+
+?>
+<html>
+	<head>
+	</head>
+	<body>
+		<input id='message_1' />  		<input id='message_2' />
+		<input id='message_3' />
+		<br/>
+		<style>canvas canvas {border: 1px solid black;}</style>
+		<canvas id='game' width=1024 height=700 style="border: 1px solid black;"> </canvas>
+		<script type="text/javascript" src="assets/Sprite.js"></script>
+		<script type="text/javascript" src="assets/Tile.js"></script>
+		<script type="text/javascript" src="assets/Map.js"></script>		
+		<script type="text/javascript" src="assets/Minotaur.js"></script>
+		<script type="text/javascript" src="assets/Zombie.js"></script>		
+		<script type="text/javascript" src="assets/Keys.js"></script>
+		<script type="text/javascript" src="assets/Mouse.js"></script>
+	</body>
+	<script type="text/javascript">
+	var msg1 = document.getElementById('message_1');
+	var msg2 = document.getElementById('message_2');
+	var msg3 = document.getElementById('message_3');	
+
+		var canvas 		= document.getElementById('game');
+		var MainContext = canvas.getContext('2d');		
+		var GlobalWatchSOID;
+		var GlobalWatchOOID;		
+		
+		
+		gameInit = function(){
+			
+			rpg.Tiles.loadImages()
+			//rpg.Map.generate()
+		};
+		runloop = function(m) {
+
+		};
+		gameInit();
+	</script>
+	
+</html>

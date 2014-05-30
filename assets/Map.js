@@ -24,7 +24,7 @@
 	                node.f = 0;
 	                node.g = 0;
 	                node.h = 0;
-	                node.cost = node.type;
+	                node.cost = node.type.a;
 	                node.visited = false;
 	                node.closed = false;
 	                node.parent = null;
@@ -387,14 +387,41 @@
 });
 
 var rpg = {
-	Map : {}
+	Map : {},
+	Tiles: {}
 }
+
+rpg.Tiles = {
+	assets : [				
+		[ "A4" , 'assets/images/Dungeon_A4.png' ],
+		[ "A5" , 'assets/images/Dungeon_A5.png' ],
+		[ "DR" , 'assets/images/Door1.png' ]
+	],
+	loading: 0,
+	loadImages : function(){
+		while(asset = this.assets.pop()){
+			var key = asset[0],
+				value = asset[1];
+			this[key] = new Image();
+			rpg.Tiles.loading++;
+			this[key].onload = function(){
+				rpg.Tiles.loading--;
+				if (rpg.Tiles.loading <= 0){
+					rpg.Map.generate()
+				}
+			}
+			this[key].src = value;
+		}
+	}
+}
+	
+	
 rpg.Map =  {
 	get_opts : function(){
 	  var opts = {
 		'seed'			  	: new Date(),
 		'n_rows'			: 25, //		  # must be an odd number
-		'n_cols'			: 50, //		 # must be an odd number
+		'n_cols'			: 20, //		 # must be an odd number
 		'dungeon_layout'	: 'None',
 		'room_min'		  	: 3,   //		# minimum room size
 		'room_max'		  	: 5,	 //	  # maximum room size
@@ -412,12 +439,12 @@ rpg.Map =  {
 	currentfloor: {},
 	floors: [],
 	type: {
-		"HALL" 		: 0,
-		"ESPACE" 	: 40,
-		"SOLID"		: 1,
-		"DOOR"		: 30,
-		"PERIMETER" : 50,
-		"OOB"		: 99
+		"HALL" 		: { a: 0, tile: "A5", x: 32, y: 11*32 },
+		"ESPACE" 	: { a: 40, tile: "A5", x: 5*32, y: 6*32 },
+		"SOLID"		: { a: 1, tile: "A5", x: 0, y: 0 },
+		"DOOR"		: { a: 40, tile: "DR", x: 0, y: 0 },
+		"PERIMETER" : { a: 40, tile: "A4", x: 0, y: 5*32 },
+		"OOB"		: { a: 40, tile: "A5", x: 0, y: 0 }
 	},
 	// Algorithm based on http://donjon.bin.sh/fantasy/dungeon/about/dungeon.pl
 	// rewritten in javascript
@@ -447,7 +474,8 @@ rpg.Map =  {
 		this.corridors(d);
 		this.currentfloor = d;
 		this.floors.push(d);
-		this.draw(d)
+		//this.draw(d)
+		this.draw2(d)
 	},
 	// create a multidimensional dungeon array
 	// this will initially be filled with solid 
@@ -654,6 +682,37 @@ rpg.Map =  {
 			}
 			console.log(line);
 		}
+	},
+	tile: function(t){
+		cellwh = 32;
+		var init = function(){
+			t.canvas = document.createElement('canvas');
+			t.canvas.setAttribute('width',  cellwh);
+			t.canvas.setAttribute('height', cellwh);
+			t.ctx = t.canvas.getContext('2d');
+			t.ctx.fillStyle = "rgb(100,0,100)";
+			t.ctx.strokeRect(0,0,t.width,t.height);
+			imageLoaded()
+
+		};
+		var imageLoaded = function(){
+			var srcX = 0, srcY =0, 
+				srcWidth =32, srcHeight=32;
+			t.ctx.drawImage(rpg.Tiles[t.type.tile], t.type.x, t.type.y, srcWidth, srcHeight, 
+									0, 0, srcWidth, srcHeight);
+			drawSelf();
+		}
+		var drawSelf = function(){
+			MainContext.drawImage(t.canvas, t.x*32, t.y*32);	
+		}
+		init();
+	},
+	draw2:function(d){
+		var pixel = 32;
+		for(var r in d.cells){
+			for (var c in d.cells[r]){
+				this.tile(d.cells[r][c])
+			}
+		}
 	}
 }
-rpg.Map.generate()
