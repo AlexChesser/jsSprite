@@ -28,10 +28,7 @@ rpg.CellType = function(def){
 		}
 	}
 }
-rpg.CellType.prototype.predraw = function(ctx){
-	// can be custom written pre cell type such that the 
-	// decorations that appear are appropriate for that cell type
-}
+rpg.CellType.prototype.predraw = function(ctx){}
 rpg.CellType.prototype.decorate = function(ctx, objects){
 	// can be custom written pre cell type such that the 
 	// decorations that appear are appropriate for that cell type
@@ -53,9 +50,11 @@ rpg.Cell.prototype.draw = function(){
 		srcY =t.type.y, 
 		srcWidth = this.width, 
 		srcHeight= this.height;
+	this.ctx.clearRect(0, 0, this.width, this.height);
 	// The decorate function has two modes of attack. anything that needs to be drawn as a sub-layer
 	// can be directly added to the CTX while anything that should be added on top can be pushed
 	// onto the objects array
+	this.type.predraw(this.ctx);
 	if(!this.deco.done){
 		t.type.decorate(this.ctx, this.objects);
 		this.deco.done = true;

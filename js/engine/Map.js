@@ -53,7 +53,7 @@ rpg.Map =  {
 		this.currentlevel = d.level;
 		this.map = d;
 		this.floors.push(d);
-		rpg.Character.loc = d.stairs.up;
+		rpg.Character.grid_to_loc(d.stairs.up);
 		this.draw2(d);
 	},
 	up: function(){
@@ -62,6 +62,7 @@ rpg.Map =  {
 		} else {
 			this.currentlevel--;
 			this.map = this.floors[this.currentlevel-1]
+			rpg.Character.grid_to_loc(this.map.stairs.down);
 			this.draw2(this.map);
 		}
 	},
@@ -69,6 +70,7 @@ rpg.Map =  {
 		if(this.currentlevel < this.floors.length){
 			this.currentlevel++;
 			this.map = this.floors[this.currentlevel-1]
+			rpg.Character.grid_to_loc(this.map.stairs.up);
 			this.draw2(this.map);
 		} else {
 			this.generate();
@@ -277,8 +279,8 @@ rpg.Map =  {
 		d.cells[UP.north+2][UP.west+2].type = rpg.Cell.prototype.types.UP;
 		d.cells[DOWN.south-2][DOWN.east-2].type = rpg.Cell.prototype.types.DOWN;
 		d.stairs = {
-			up: {x: UP.north+2, y: UP.west+2},
-			down: {x: DOWN.south-2, y: DOWN.east-2}
+			up: {x: UP.north+2, y: UP.west+2, height: 32},
+			down: {x: DOWN.south-2, y: DOWN.east-2, height: 32}
 		}
 	},
 	draw: function(d){
