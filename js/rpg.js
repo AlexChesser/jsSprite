@@ -2,9 +2,14 @@
 // Create namespaces
 var rpg = {
 	init: function(){
-		this.canvas = document.getElementById('game'); 
+		this.canvas = document.getElementById('game');
+		this.canvas.addEventListener("click", 
+			function(e){
+				rpg.Character.PathToXY({ x: e.layerX, y: e.layerY });
+		}, false);
 		this.ctx = this.canvas.getContext('2d');
 		rpg.Tiles.loadImages();
+		rpg.Timer = null;
 	},
 	canvas: null,
 	ctx: null,
@@ -25,5 +30,21 @@ var rpg = {
 	Actor: {},
 	// Character is the first mobile unit. Huzzah!
 	// this inherits from Actor
-	Character: {}
+	Character: {},
+	gameloop: function(){
+		var m = rpg.Map.map;
+		if(m){
+			for(i in m.actors){
+				m.actors[i].update()
+			}
+			for(i in m.actors){
+				m.actors[i].draw()
+			}
+		} else {
+			rpg.Map.generate();
+		}
+	},
+	start: function(){
+		this.Timer = setInterval(this.gameloop, 1000/5)
+	}
 };

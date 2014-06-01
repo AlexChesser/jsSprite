@@ -16,8 +16,8 @@ rpg.Cell = function(def){
 	this.objects = []
 }
 rpg.Cell.prototype.isWall = function(){
-	if (this.type.name === "PERIM"){
-		return true;
+	if (typeof this.type.isWall !== 'undefined'){
+		return this.type.isWall();
 	}
 	return false;//this.type.a > 10
 }
@@ -39,11 +39,13 @@ rpg.Cell.prototype.types = {
 	// tile: the asset to find the sprite sheet on
 	// broken: the probability that a tile will display the "broken" version (when available)
 	// TODO: improve variation in sprites selected per task
-	"SOLID"	 : new rpg.CellType({ name: "SOLID", a: 10, tile: "A4", x: (2*32)+16,y: (4*32)-16 }),
-	"DOOR"	 : new rpg.CellType({ name: "DOOR", 	a: 40, tile: "DR", x: 0*32, 	y: 0 }),
-	"DOWN"	 : new rpg.CellType({ name: "DOWN", 	a: 40, tile: "B",  x: 2*32, 	y: 1*32 }),
-	"PERIM"  : new rpg.CellType({ name: "PERIM", a: 40, tile: "A4", x: 10*32, 	y: 9*32 })
+	"DOOR"	 : new rpg.CellType({ name: "DOOR",  a: 40, tile: "DR", x: 0*32, 	y: 0 })
 };
+rpg.Cell.prototype.stand = function(cell, actor){
+	if (typeof this.type.stand !== 'undefined'){
+		this.type.stand(this, actor);
+	}
+}
 rpg.Cell.prototype.draw = function(){
 	var t = this;
 	var srcX = t.type.x, 
@@ -66,6 +68,11 @@ rpg.Cell.prototype.draw = function(){
 		var o = this.objects[i];
 		t.ctx.drawImage(rpg.Tiles[o.tile], o.x, o.y, o.w, o.h, 
 					0, 0, srcWidth, srcHeight);
+	}
+	if(false) {
+		t.ctx.font = "10px Arial";
+		t.ctx.fillStyle = "#FFFFFF";
+		t.ctx.fillText( "["+t.x+ ","+t.y+"]", 0,12)
 	}
 	rpg.ctx.drawImage(t.canvas, t.x*32, t.y*32);
 }

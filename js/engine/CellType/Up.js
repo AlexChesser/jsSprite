@@ -12,5 +12,8 @@ rpg.Cell.prototype.types.UP = new rpg.CellType({
 			w: 32,
 			h: 32
 		})
+	},
+	stand: function(){
+		rpg.Map.up();
 	}
 });

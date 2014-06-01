@@ -19,10 +19,12 @@ rpg.Map =  {
 	},
 	currentfloor: {},
 	floors: [],
+	isGenerating: false,
 	// Algorithm based on http://donjon.bin.sh/fantasy/dungeon/about/dungeon.pl
 	// rewritten in javascript
     // altered to use astar to connect rooms instead of random corridors
 	generate: function(d){
+		this.isGenerating = true;
 		if (d === undefined) {
 			d = rpg.Map.get_opts();
 		}
@@ -41,7 +43,7 @@ rpg.Map =  {
 		this.min = d.room_min;
 		d.room_base = parseInt((this.min + 1) / 2);
 		d.room_radix = parseInt((this.max - this.min) / 2);
-
+		d.actors = [];
 		this.empty_dungeon(d);
 		this.init_rooms(d);
 		this.open_rooms(d);
@@ -53,7 +55,9 @@ rpg.Map =  {
 		this.currentlevel = d.level;
 		this.map = d;
 		this.floors.push(d);
-		rpg.Character.grid_to_loc(d.stairs.up);
+		rpg.Character.set_to_grid(d.stairs.up);
+		d.actors.push(rpg.Character);
+		this.isGenerating = false;
 		this.draw2(d);
 	},
 	up: function(){
@@ -62,7 +66,7 @@ rpg.Map =  {
 		} else {
 			this.currentlevel--;
 			this.map = this.floors[this.currentlevel-1]
-			rpg.Character.grid_to_loc(this.map.stairs.down);
+			rpg.Character.set_to_grid(this.map.stairs.down);
 			this.draw2(this.map);
 		}
 	},
@@ -70,12 +74,12 @@ rpg.Map =  {
 		if(this.currentlevel < this.floors.length){
 			this.currentlevel++;
 			this.map = this.floors[this.currentlevel-1]
-			rpg.Character.grid_to_loc(this.map.stairs.up);
+			rpg.Character.set_to_grid(this.map.stairs.up);
 			this.draw2(this.map);
 		} else {
 			this.generate();
 		}
-	},
+	},	
 	// create a multidimensional dungeon array
 	// this will initially be filled with solid 
 	empty_dungeon: function(d){
@@ -300,6 +304,5 @@ rpg.Map =  {
 				d.cells[r][c].draw()
 			}
 		}
-		rpg.Character.updateframe();
 	}
 }

@@ -53,7 +53,7 @@
 	        var closest = options.closest || false;
 	        var openHeap = astar.heap();
 	        var start = grid[start.x][start.y],
-	        	end = grid[end.x][end.y]
+	        	end = grid[end.x][end.y];
 
 	        // set the start node to be the closest if required
 	        var closestNode = start;
@@ -69,8 +69,6 @@
 	            }
 	            return path.reverse();
 	        }
-
-
 	        openHeap.push(start);
 
 	        while(openHeap.size() > 0) {
@@ -118,8 +116,6 @@
 	                            closestNode = neighbor;
 	                        }
 	                    }
-
-
 
 	                    if (!beenVisited) {
 	                        // Pushing to heap will put it in proper place based on the 'f' value.

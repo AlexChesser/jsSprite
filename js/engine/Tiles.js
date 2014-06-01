@@ -16,7 +16,7 @@ rpg.Tiles = {
 			this[key].onload = function(){
 				rpg.Tiles.loading--;
 				if (rpg.Tiles.loading <= 0){
-					rpg.Map.generate()
+					rpg.start()
 				}
 			}
 			this[key].src = value;

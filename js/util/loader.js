@@ -7,8 +7,11 @@
         "/js/rpg.js",
         "/js/engine/Tiles.js",
         "/js/engine/Cell.js",
+        "/js/engine/CellType/Solid.js",
         "/js/engine/CellType/Espace.js",
+        "/js/engine/CellType/Perim.js",
         "/js/engine/CellType/Up.js",
+        "/js/engine/CellType/Down.js",
         "/js/engine/CellType/Hall.js",
         "js/engine/Map.js",
         "js/engine/Character.js"
