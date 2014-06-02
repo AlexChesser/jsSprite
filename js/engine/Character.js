@@ -53,7 +53,7 @@ rpg.Actor.prototype.update = function(){
 	}
 	if (this.path.length >0 ){
 		this.anim();
-		var c = this.path.shift();
+		var c = this.path.shift(),
 			cell = rpg.Map.map.cells[c.x][c.y];
 		this.set_to_grid(cell);
 		cell.stand(cell, this);
@@ -80,7 +80,7 @@ rpg.Actor.prototype.draw = function() {
 	this.ctx.drawImage(	rpg.Tiles[s.tile], // what image is this coming from?
 						s.w * s.frame, s.dir[this.facing].x,// what pixel in image to read from (x,y),  
 						s.w, s.h,  // how many pixels in each direction to read?
-						0, 0, s.w, s.h);	
+						0, 0, s.w, s.h);
 	rpg.ctx.drawImage(this.canvas, this.loc.x, this.loc.y);
 };
 rpg.Actor.prototype.set_to_grid = function(grid) {
@@ -96,18 +96,18 @@ rpg.Actor.prototype.grid_to_loc = function(grid){
 }
 rpg.Character = new rpg.Actor({
 	// location in actual pixels
-	loc: {
+	grid: {
 		x: 0,
 		y: 0
-	},
-	grid: {
+	},	
+	loc: {
 		x: 0,
 		y: 0
 	},
 	path: [],	
 	facing: 0,
 	speed: {
-		base: 10,
+		base: 1,
 		x: 0,
 		y: 0
 	},

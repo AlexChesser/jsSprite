@@ -14,6 +14,6 @@ rpg.Cell.prototype.types.UP = new rpg.CellType({
 		})
 	},
 	stand: function(){
-		rpg.Map.up();
+		rpg.Map.direction = 'up'
 	}
 });

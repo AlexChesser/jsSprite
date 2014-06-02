@@ -20,6 +20,7 @@ rpg.Map =  {
 	currentfloor: {},
 	floors: [],
 	isGenerating: false,
+	direction: null,
 	// Algorithm based on http://donjon.bin.sh/fantasy/dungeon/about/dungeon.pl
 	// rewritten in javascript
     // altered to use astar to connect rooms instead of random corridors
@@ -69,6 +70,7 @@ rpg.Map =  {
 			rpg.Character.set_to_grid(this.map.stairs.down);
 			this.draw2(this.map);
 		}
+		this.direction = null;
 	},
 	down: function(){
 		if(this.currentlevel < this.floors.length){
@@ -79,6 +81,7 @@ rpg.Map =  {
 		} else {
 			this.generate();
 		}
+		this.direction = null;
 	},	
 	// create a multidimensional dungeon array
 	// this will initially be filled with solid 

@@ -7,12 +7,14 @@ var rpg = {
 			function(e){
 				rpg.Character.PathToXY({ x: e.layerX, y: e.layerY });
 		}, false);
+		this.center = [ this.canvas.width/2, this.canvas.height/2 ];
 		this.ctx = this.canvas.getContext('2d');
 		rpg.Tiles.loadImages();
 		rpg.Timer = null;
 	},
 	canvas: null,
 	ctx: null,
+	center: [0, 0],
 	// Tiles are the various images used in the game.
 	// they are individual sprite sheets
 	Tiles: {},
@@ -33,6 +35,9 @@ var rpg = {
 	Character: {},
 	gameloop: function(){
 		var m = rpg.Map.map;
+		if(rpg.Map.direction){
+			rpg.Map[rpg.Map.direction]();
+		}
 		if(m){
 			for(i in m.actors){
 				m.actors[i].update()
@@ -45,6 +50,6 @@ var rpg = {
 		}
 	},
 	start: function(){
-		this.Timer = setInterval(this.gameloop, 1000/5)
+		this.Timer = setInterval(this.gameloop, 1000/24)
 	}
 };

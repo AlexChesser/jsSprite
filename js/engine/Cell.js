@@ -74,5 +74,5 @@ rpg.Cell.prototype.draw = function(){
 		t.ctx.fillStyle = "#FFFFFF";
 		t.ctx.fillText( "["+t.x+ ","+t.y+"]", 0,12)
 	}
-	rpg.ctx.drawImage(t.canvas, t.x*32, t.y*32);
+ 	rpg.ctx.drawImage(t.canvas, t.x*32, t.y*32);
 }
