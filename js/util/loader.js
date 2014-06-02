@@ -42,9 +42,9 @@
             var scriptElm = document.createElement('script');
             scriptElm.type = 'text/javascript';
             scriptElm.async = 'async';
-            scriptElm.src = path;
+            scriptElm.src = "/jsSprite"+path;
             scriptElm.onload = scriptElm.onreadystatechange = 
-                checkStateAndCall("/jsSprite"+path, loadNext); // load next file in chain when
+                checkStateAndCall(path, loadNext); // load next file in chain when
                                                    // this one will be ready 
             var headElm = document.head || document.getElementsByTagName('head')[0];
             headElm.appendChild(scriptElm);
