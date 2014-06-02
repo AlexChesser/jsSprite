@@ -44,7 +44,7 @@
             scriptElm.async = 'async';
             scriptElm.src = path;
             scriptElm.onload = scriptElm.onreadystatechange = 
-                checkStateAndCall(path, loadNext); // load next file in chain when
+                checkStateAndCall("/jsSprite"+path, loadNext); // load next file in chain when
                                                    // this one will be ready 
             var headElm = document.head || document.getElementsByTagName('head')[0];
             headElm.appendChild(scriptElm);
